@@ -2,14 +2,19 @@
 const route = useRoute()
 const router = useRouter()
 
-const filters = reactive({
-  scent: (route.query.scent as string) || 'all',
-  purpose: (route.query.purpose as string) || 'all',
-  composition: (route.query.composition as string) || 'all',
-  size: (route.query.size as string) || 'all',
-  sort: (route.query.sort as string) || 'newest',
-  page: Number(route.query.page || 1),
-})
+function filtersFromRoute() {
+  return {
+    scent: typeof route.query.scent === 'string' ? route.query.scent : 'all',
+    purpose: typeof route.query.purpose === 'string' ? route.query.purpose : 'all',
+    composition: typeof route.query.composition === 'string' ? route.query.composition : 'all',
+    size: typeof route.query.size === 'string' ? route.query.size : 'all',
+    sort: typeof route.query.sort === 'string' ? route.query.sort : 'newest',
+    page: Number(route.query.page || 1) || 1,
+  }
+}
+
+const filters = reactive(filtersFromRoute())
+let syncingFromRoute = false
 
 const query = computed(() => ({
   scent: filters.scent,
@@ -21,12 +26,25 @@ const query = computed(() => ({
   pageSize: 10,
 }))
 
-const { data, refresh } = await useFetch('/api/products', { query })
+// Single fetch path: useFetch watches `query` and refetches when filters change.
+const { data } = await useFetch('/api/products', { query })
+
+watch(
+  () => route.query,
+  () => {
+    syncingFromRoute = true
+    Object.assign(filters, filtersFromRoute())
+    nextTick(() => {
+      syncingFromRoute = false
+    })
+  },
+)
 
 watch(
   filters,
-  async () => {
-    await router.replace({
+  () => {
+    if (syncingFromRoute) return
+    router.replace({
       query: {
         scent: filters.scent === 'all' ? undefined : filters.scent,
         purpose: filters.purpose === 'all' ? undefined : filters.purpose,
@@ -36,7 +54,6 @@ watch(
         page: filters.page > 1 ? String(filters.page) : undefined,
       },
     })
-    await refresh()
   },
   { deep: true },
 )
