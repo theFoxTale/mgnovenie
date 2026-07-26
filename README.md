@@ -29,22 +29,23 @@ Configs: `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`.
 
 Catalog: with `NUXT_DATABASE_URL` set, products/collections/orders use Postgres (`db/seed.sql`). Without it (local only), the in-memory catalog is used and orders go to `apps/web/.data/orders.json`. **Production requires Postgres** (file store is disabled when `NODE_ENV=production`).
 
-Optional Postgres for local API against a real DB:
+Optional Postgres for local API against a real DB (publishes `127.0.0.1:5432` only):
 
 ```bash
 # from repo root
 cp .env.example .env
-docker compose up -d db
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
 ```
 
-Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`.
+Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`. On the VPS, use plain `docker compose up` — Postgres is not published to the host.
 
 ## Project layout
 
 - `apps/web` — Nuxt app (pages, Pinia cart, Nitro API)
 - `db/` — SQL schema and seed
 - `nginx/` — reverse proxy config
-- `docker-compose.yml` — web + db + nginx
+- `docker-compose.yml` — web + db + nginx (db internal only)
+- `docker-compose.dev.yml` — local overlay: Postgres on `127.0.0.1:5432`
 
 ## Phase 1 features
 
@@ -58,7 +59,7 @@ Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`.
 1. Point DNS `A` record to the VPS IP.
 2. Install Docker Engine + Compose plugin.
 3. Clone this repository on the server.
-4. Copy `.env.example` → `.env` and set secrets / `NUXT_PUBLIC_SITE_URL=https://your.domain`.
+4. Copy `.env.example` → `.env`. Set a strong `POSTGRES_PASSWORD` and `NUXT_PUBLIC_SITE_URL=https://your.domain`. Do not use `docker-compose.dev.yml` on the server (it would publish Postgres to localhost).
 5. Start stack:
 
 ```bash

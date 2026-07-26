@@ -6,8 +6,8 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-mgnovenie}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mgnovenie}
       POSTGRES_DB: ${POSTGRES_DB:-mgnovenie}
-    ports:
-      - "5432:5432"
+    # No host ports — db stays on the Compose network only (web → db:5432).
+    # For host tools (psql, local Nuxt), use: docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d db
     volumes:
       - pgdata:/var/lib/postgresql/data
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
