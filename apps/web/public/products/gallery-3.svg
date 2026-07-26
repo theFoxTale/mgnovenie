@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000" fill="none">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#3a3228"/>
+      <stop offset="100%" stop-color="#151310"/>
+    </radialGradient>
+    <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#f0c27a"/>
+      <stop offset="100%" stop-color="#fff3d6"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="1000" fill="url(#g)"/>
+  <ellipse cx="400" cy="780" rx="180" ry="36" fill="#0d0c0a" opacity="0.55"/>
+  <rect x="300" y="520" width="200" height="220" rx="20" fill="#c9b59a"/>
+  <rect x="312" y="532" width="176" height="196" rx="14" fill="#b79f7f"/>
+  <ellipse cx="400" cy="520" rx="100" ry="18" fill="#a89272"/>
+  <ellipse cx="400" cy="510" rx="78" ry="14" fill="#2a2118"/>
+  <rect x="394" y="430" width="12" height="80" rx="4" fill="#5c4632"/>
+  <ellipse cx="400" cy="410" rx="18" ry="34" fill="url(#flame)"/>
+  <circle cx="400" cy="392" r="5" fill="#fff8e8"/>
+  <text x="400" y="640" text-anchor="middle" fill="#3d3226" font-family="Georgia, serif" font-size="18" letter-spacing="4">MGNOVENIE</text>
+</svg>

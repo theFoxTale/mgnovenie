@@ -1,0 +1,52 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mgnovenie}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mgnovenie}
+      POSTGRES_DB: ${POSTGRES_DB:-mgnovenie}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./db/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mgnovenie} -d ${POSTGRES_DB:-mgnovenie}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-mgnovenie}:${POSTGRES_PASSWORD:-mgnovenie}@db:5432/${POSTGRES_DB:-mgnovenie}
+      NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-http://localhost}
+      HOST: 0.0.0.0
+      PORT: 3000
+      NITRO_PORT: 3000
+      NITRO_HOST: 0.0.0.0
+    depends_on:
+      db:
+        condition: service_healthy
+    expose:
+      - "3000"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
+    depends_on:
+      - web
+
+volumes:
+  pgdata:
