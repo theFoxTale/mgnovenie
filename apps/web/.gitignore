@@ -1,24 +1,26 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
+# Nuxt app — complements root .gitignore
 
-# Node dependencies
-node_modules
+# Dev / build outputs
+.output/
+.data/
+.nuxt/
+.nitro/
+.cache/
+dist/
 
-# Logs
-logs
-*.log
+# Dependencies
+node_modules/
 
-# Misc
-.DS_Store
-.fleet
-.idea
-
-# Local env files
+# Env
 .env
 .env.*
 !.env.example
+
+# Logs
+logs/
+*.log
+
+# Editors (local)
+.DS_Store
+.fleet/
+.idea/
