@@ -1,40 +1,24 @@
 import { randomUUID } from 'node:crypto'
+import { ZodError } from 'zod'
 import { findProduct } from '../../utils/catalog'
+import { orderBodySchema } from '../../utils/order-schema'
 import { saveOrder } from '../../utils/orders'
 
-type OrderItemInput = {
-  productId: string
-  slug: string
-  name: string
-  price: number
-  quantity: number
-}
-
-type OrderBody = {
-  customer: {
-    name: string
-    phone: string
-    email: string
-    address: string
-    comment?: string
-  }
-  items: OrderItemInput[]
-}
-
 export default defineEventHandler(async (event) => {
-  const body = await readBody<OrderBody>(event)
-
-  if (
-    !body?.customer?.name ||
-    !body?.customer?.phone ||
-    !body?.customer?.email ||
-    !body?.customer?.address
-  ) {
-    throw createError({ statusCode: 400, statusMessage: 'Customer fields are required' })
-  }
-
-  if (!Array.isArray(body.items) || body.items.length === 0) {
-    throw createError({ statusCode: 400, statusMessage: 'Cart is empty' })
+  let body
+  try {
+    body = await readValidatedBody(event, orderBodySchema.parse)
+  } catch (error) {
+    if (error instanceof ZodError) {
+      throw createError({
+        statusCode: 400,
+        statusMessage: error.issues[0]?.message || 'Invalid order payload',
+      })
+    }
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Invalid order payload',
+    })
   }
 
   const items = []
@@ -43,14 +27,13 @@ export default defineEventHandler(async (event) => {
     if (!product) {
       throw createError({ statusCode: 400, statusMessage: `Unknown product: ${item.slug}` })
     }
-    const quantity = Math.min(99, Math.max(1, Number(item.quantity) || 1))
     items.push({
       productId: product.id,
       slug: product.slug,
       name: product.name,
       price: product.price,
-      quantity,
-      lineTotal: product.price * quantity,
+      quantity: item.quantity,
+      lineTotal: product.price * item.quantity,
     })
   }
 
@@ -60,11 +43,11 @@ export default defineEventHandler(async (event) => {
     status: 'awaiting_manual' as const,
     createdAt: new Date().toISOString(),
     customer: {
-      name: body.customer.name.trim(),
-      phone: body.customer.phone.trim(),
-      email: body.customer.email.trim(),
-      address: body.customer.address.trim(),
-      comment: body.customer.comment?.trim() || '',
+      name: body.customer.name,
+      phone: body.customer.phone,
+      email: body.customer.email,
+      address: body.customer.address,
+      comment: body.customer.comment,
     },
     items,
     total,
