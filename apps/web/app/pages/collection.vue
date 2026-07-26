@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Product } from '#shared/types/product'
+
 const route = useRoute()
 const router = useRouter()
 
@@ -27,7 +29,13 @@ const query = computed(() => ({
 }))
 
 // Single fetch path: useFetch watches `query` and refetches when filters change.
-const { data } = await useFetch('/api/products', { query })
+const { data } = await useFetch<{
+  items: Product[]
+  total: number
+  page: number
+  pageSize: number
+  pageCount: number
+}>('/api/products', { query })
 
 watch(
   () => route.query,

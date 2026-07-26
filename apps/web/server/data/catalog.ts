@@ -1,4 +1,5 @@
-import type { CollectionCard, Product } from '#shared/types/catalog'
+import type { CollectionCard } from '#shared/types/catalog'
+import type { Product } from '#shared/types/product'
 
 export type { CollectionCard, Product }
 

@@ -3,7 +3,8 @@ import {
   getProductBySlug as getMemoryProductBySlug,
   products as memoryProducts,
 } from '../data/catalog'
-import type { CollectionCard, Product } from '#shared/types/catalog'
+import type { CollectionCard } from '#shared/types/catalog'
+import type { Product } from '#shared/types/product'
 import { hasDatabase, query } from './db'
 
 export type ProductQuery = {

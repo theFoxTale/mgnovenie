@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { data: collections } = await useFetch('/api/collections')
+import type { CollectionCard } from '#shared/types/catalog'
+
+const { data: collections } = await useFetch<{ items: CollectionCard[] }>('/api/collections')
 </script>
 
 <template>

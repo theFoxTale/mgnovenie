@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Product } from '#shared/types/product'
+
 const route = useRoute()
 const cart = useCartStore()
 const quantity = ref(1)
@@ -6,7 +8,9 @@ const openSection = ref<'description' | 'composition' | 'delivery'>('description
 const activeImage = ref(0)
 const wishlisted = ref(false)
 
-const { data, error } = await useFetch(() => `/api/products/${route.params.slug}`)
+const { data, error } = await useFetch<{ product: Product; related: Product[] }>(
+  () => `/api/products/${route.params.slug}`,
+)
 
 if (error.value) {
   throw createError({ statusCode: 404, statusMessage: 'Товар не найден' })

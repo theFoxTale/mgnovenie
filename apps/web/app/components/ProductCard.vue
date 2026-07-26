@@ -1,15 +1,8 @@
 <script setup lang="ts">
-type CardProduct = {
-  id: string
-  slug: string
-  name: string
-  subtitle: string
-  price: number
-  image: string
-}
+import type { ProductSummary } from '#shared/types/product'
 
 const props = defineProps<{
-  product: CardProduct
+  product: ProductSummary
 }>()
 
 const cart = useCartStore()
