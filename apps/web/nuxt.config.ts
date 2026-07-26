@@ -44,7 +44,8 @@ export default defineNuxtConfig({
   routeRules: {
     // Public catalog pages — stale-while-revalidate (seconds)
     '/': { swr: 900 },
-    '/collection': { swr: 300 },
+    // Collection filters client-side; avoid treating every ?scent= as a new cached document.
+    '/collection': { swr: false },
     '/product/**': { swr: 900 },
     // Public catalog APIs (orders stay uncached)
     '/api/products/**': { swr: 600 },
