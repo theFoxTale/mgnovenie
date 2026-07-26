@@ -1,9 +1,5 @@
 <script setup lang="ts">
 const cart = useCartStore()
-
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
-}
 </script>
 
 <template>

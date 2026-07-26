@@ -38,10 +38,6 @@ onMounted(() => {
   if (product.value) wishlisted.value = cart.isWishlisted(product.value.id)
 })
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
-}
-
 function addToCart() {
   if (!product.value) return
   cart.addItem(

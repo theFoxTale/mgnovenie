@@ -8,10 +8,6 @@ const props = defineProps<{
 const cart = useCartStore()
 const wishlisted = ref(false)
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
-}
-
 function syncWishlist() {
   wishlisted.value = cart.isWishlisted(props.product.id)
 }

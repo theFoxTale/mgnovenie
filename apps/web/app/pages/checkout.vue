@@ -14,10 +14,6 @@ const submitting = ref(false)
 const errorMessage = ref('')
 const successId = ref('')
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
-}
-
 async function submit() {
   errorMessage.value = ''
   if (!cart.items.length) {
