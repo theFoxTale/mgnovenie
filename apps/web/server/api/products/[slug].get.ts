@@ -22,16 +22,24 @@ defineRouteMeta({
   },
 })
 
-export default defineEventHandler(async (event) => {
-  const { slug } = await getValidatedRouterParams(event, productSlugParamsSchema.parse)
+export default cachedEventHandler(
+  async (event) => {
+    const { slug } = await getValidatedRouterParams(event, productSlugParamsSchema.parse)
 
-  const product = await findProduct(slug)
-  if (!product) {
-    throw createError({ statusCode: 404, statusMessage: 'Product not found' })
-  }
+    const product = await findProduct(slug)
+    if (!product) {
+      throw createError({ statusCode: 404, statusMessage: 'Product not found' })
+    }
 
-  return {
-    product,
-    related: await relatedProducts(product),
-  }
-})
+    return {
+      product,
+      related: await relatedProducts(product),
+    }
+  },
+  {
+    maxAge: 900,
+    swr: true,
+    name: 'api-product-by-slug',
+    getKey: (event) => `product:${getRouterParam(event, 'slug') || ''}`,
+  },
+)

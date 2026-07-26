@@ -23,7 +23,28 @@ defineRouteMeta({
   },
 })
 
-export default defineEventHandler(async (event) => {
-  const query = await getValidatedQuery(event, productQuerySchema.parse)
-  return listProducts(query)
-})
+export default cachedEventHandler(
+  async (event) => {
+    const query = await getValidatedQuery(event, productQuerySchema.parse)
+    return listProducts(query)
+  },
+  {
+    maxAge: 600,
+    swr: true,
+    name: 'api-products-list',
+    getKey: (event) => {
+      const q = getQuery(event)
+      return [
+        'products',
+        q.scent ?? '',
+        q.purpose ?? '',
+        q.composition ?? '',
+        q.size ?? '',
+        q.sort ?? '',
+        q.page ?? '1',
+        q.pageSize ?? '10',
+        q.featured ?? '',
+      ].join(':')
+    },
+  },
+)

@@ -41,4 +41,13 @@ export default defineNuxtConfig({
       openAPI: true,
     },
   },
+  routeRules: {
+    // Public catalog pages — stale-while-revalidate (seconds)
+    '/': { swr: 900 },
+    '/collection': { swr: 300 },
+    '/product/**': { swr: 900 },
+    // Public catalog APIs (orders stay uncached)
+    '/api/products/**': { swr: 600 },
+    '/api/collections': { swr: 900 },
+  },
 })

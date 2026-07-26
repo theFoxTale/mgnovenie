@@ -11,8 +11,15 @@ defineRouteMeta({
   },
 })
 
-export default defineEventHandler(async () => {
-  return {
-    items: await listCollections(),
-  }
-})
+export default cachedEventHandler(
+  async () => {
+    return {
+      items: await listCollections(),
+    }
+  },
+  {
+    maxAge: 900,
+    swr: true,
+    name: 'api-collections',
+  },
+)
