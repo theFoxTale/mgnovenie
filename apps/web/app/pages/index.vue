@@ -2,6 +2,20 @@
 import type { CollectionCard } from '#shared/types/catalog'
 
 const { data: collections } = await useFetch<{ items: CollectionCard[] }>('/api/collections')
+
+const config = useRuntimeConfig()
+const homeTitle = 'MGNOVENIE — натуральные свечи'
+const homeDescription =
+  'Натуральные свечи ручной работы из пчелиного воска. Искусство создавать мгновения.'
+
+useSeoMeta({
+  title: homeTitle,
+  description: homeDescription,
+  ogTitle: homeTitle,
+  ogDescription: homeDescription,
+  ogImage: `${config.public.siteUrl}/products/hvoinyi-les.svg`,
+  ogType: 'website',
+})
 </script>
 
 <template>
