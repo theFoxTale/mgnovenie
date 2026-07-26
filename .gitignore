@@ -9,6 +9,7 @@ dist
 .DS_Store
 .idea
 .vscode
+.cursor
 coverage
 apps/web/.data
 nginx/certs/*

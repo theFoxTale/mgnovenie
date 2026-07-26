@@ -7,7 +7,14 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "lint:style": "stylelint \"**/*.{css,vue}\"",
+    "lint:style:fix": "stylelint \"**/*.{css,vue}\" --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint:all": "npm run lint && npm run lint:style && npm run format:check"
   },
   "dependencies": {
     "@pinia/nuxt": "^1.0.1",
@@ -18,7 +25,16 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1.16.0",
     "@types/pg": "^8.20.0",
-    "typescript": "^7.0.2"
+    "eslint": "^10.8.0",
+    "eslint-config-prettier": "^10.1.8",
+    "postcss-html": "^1.8.1",
+    "prettier": "^3.9.6",
+    "stylelint": "^17.14.1",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-recess-order": "^7.7.0",
+    "stylelint-config-standard": "^40.0.0",
+    "typescript": "~5.9.0"
   }
 }

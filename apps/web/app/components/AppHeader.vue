@@ -11,9 +11,12 @@ const links = [
   { to: '/contacts', label: 'Контакты' },
 ]
 
-watch(() => route.fullPath, () => {
-  menuOpen.value = false
-})
+watch(
+  () => route.fullPath,
+  () => {
+    menuOpen.value = false
+  },
+)
 </script>
 
 <template>
@@ -40,7 +43,12 @@ watch(() => route.fullPath, () => {
         <NuxtLink to="/collection" class="header__icon" aria-label="Поиск">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5" />
-            <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+            <path
+              d="M20 20l-3.5-3.5"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+            />
           </svg>
         </NuxtLink>
         <NuxtLink to="/cart" class="header__icon header__cart" aria-label="Корзина">
@@ -61,17 +69,17 @@ watch(() => route.fullPath, () => {
   top: 0;
   z-index: 40;
   height: var(--header-h);
-  background: var(--color-cream);
   color: var(--color-text-on-cream);
+  background: var(--color-cream);
   border-bottom: 1px solid rgba(42, 37, 31, 0.08);
 }
 
 .header__inner {
-  height: 100%;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  align-items: center;
   gap: 1rem;
+  align-items: center;
+  height: 100%;
 }
 
 .header__menu {
@@ -79,9 +87,9 @@ watch(() => route.fullPath, () => {
   width: 2.25rem;
   height: 2.25rem;
   padding: 0;
-  border: 0;
-  background: transparent;
   cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 
 .header__menu span {
@@ -101,9 +109,9 @@ watch(() => route.fullPath, () => {
 
 .header__link {
   font-size: 0.68rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: rgba(42, 37, 31, 0.72);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
   transition: color var(--dur-fast) var(--ease-out);
 }
 
@@ -122,32 +130,32 @@ watch(() => route.fullPath, () => {
 .header__logo {
   font-family: var(--font-display);
   font-size: 1.45rem;
-  letter-spacing: 0.22em;
   font-weight: 500;
+  letter-spacing: 0.22em;
 }
 
 .header__tag {
   margin-top: -0.15rem;
   font-family: var(--font-display);
-  font-style: italic;
   font-size: 0.85rem;
+  font-style: italic;
   color: rgba(42, 37, 31, 0.55);
 }
 
 .header__actions {
   display: flex;
-  justify-content: flex-end;
   gap: 0.85rem;
   align-items: center;
+  justify-content: flex-end;
 }
 
 .header__icon {
   display: inline-flex;
-  align-items: center;
   gap: 0.35rem;
+  align-items: center;
   font-size: 0.72rem;
-  letter-spacing: 0.08em;
   color: rgba(42, 37, 31, 0.8);
+  letter-spacing: 0.08em;
 }
 
 .header__cart span {
@@ -163,12 +171,12 @@ watch(() => route.fullPath, () => {
   .header__nav {
     position: absolute;
     top: var(--header-h);
-    left: 0;
     right: 0;
+    left: 0;
     display: none;
     flex-direction: column;
-    align-items: flex-start;
     gap: 0;
+    align-items: flex-start;
     padding: 0.5rem 1rem 1rem;
     background: var(--color-cream);
     border-bottom: 1px solid rgba(42, 37, 31, 0.08);

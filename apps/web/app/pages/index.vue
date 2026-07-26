@@ -8,8 +8,10 @@ const { data: collections } = await useFetch('/api/collections')
       <div class="hero__content container">
         <div class="hero__copy">
           <h1>
-            Искусство<br />
-            создавать<br />
+            Искусство
+            <br />
+            создавать
+            <br />
             мгновения
           </h1>
           <p class="eyebrow">Натуральные свечи ручной работы из пчелиного воска</p>
@@ -24,10 +26,22 @@ const { data: collections } = await useFetch('/api/collections')
         </div>
 
         <ul class="hero__features">
-          <li><span>✦</span> Пчелиный воск</li>
-          <li><span>❀</span> Натуральные ароматы</li>
-          <li><span>◎</span> Ручная работа</li>
-          <li><span>❐</span> Экологичное производство</li>
+          <li>
+            <span>✦</span>
+            Пчелиный воск
+          </li>
+          <li>
+            <span>❀</span>
+            Натуральные ароматы
+          </li>
+          <li>
+            <span>◎</span>
+            Ручная работа
+          </li>
+          <li>
+            <span>❐</span>
+            Экологичное производство
+          </li>
         </ul>
       </div>
     </section>
@@ -61,7 +75,8 @@ const { data: collections } = await useFetch('/api/collections')
         <div>
           <h2 class="eyebrow">О наших свечах</h2>
           <p>
-            Мы верим в силу натуральных материалов и ручного труда. Каждая свеча создана с вниманием к деталям и с уважением к природе.
+            Мы верим в силу натуральных материалов и ручного труда. Каждая свеча создана с вниманием
+            к деталям и с уважением к природе.
           </p>
           <NuxtLink to="/about" class="about-strip__link">Подробнее о нас →</NuxtLink>
         </div>
@@ -92,10 +107,10 @@ const { data: collections } = await useFetch('/api/collections')
 .hero {
   position: relative;
   min-height: calc(100vh - var(--header-h));
+  overflow: hidden;
   background:
     radial-gradient(ellipse at 70% 35%, rgba(120, 95, 60, 0.18), transparent 50%),
     linear-gradient(180deg, #1a1713 0%, #0f0e0c 100%);
-  overflow: hidden;
 }
 
 .hero__content {
@@ -109,10 +124,10 @@ const { data: collections } = await useFetch('/api/collections')
 }
 
 .hero__copy h1 {
+  margin-bottom: 1.25rem;
   font-size: clamp(2.8rem, 6vw, 4.8rem);
   font-weight: 500;
   letter-spacing: 0.02em;
-  margin-bottom: 1.25rem;
 }
 
 .hero__copy .eyebrow {
@@ -140,11 +155,11 @@ const { data: collections } = await useFetch('/api/collections')
 
 .hero__features li {
   display: flex;
-  align-items: center;
   gap: 0.7rem;
+  align-items: center;
   font-size: 0.78rem;
-  letter-spacing: 0.04em;
   color: var(--color-text-muted);
+  letter-spacing: 0.04em;
 }
 
 .hero__features span {
@@ -152,15 +167,15 @@ const { data: collections } = await useFetch('/api/collections')
 }
 
 .collections {
-  background: var(--color-cream);
-  color: var(--color-text-on-cream);
   padding: 3.5rem 0;
+  color: var(--color-text-on-cream);
+  background: var(--color-cream);
 }
 
 .collections__head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin-bottom: 1.75rem;
 }
 
@@ -192,14 +207,14 @@ const { data: collections } = await useFetch('/api/collections')
 
 .collections__card p {
   margin: 0.25rem 0 0.55rem;
-  color: rgba(42, 37, 31, 0.6);
   font-size: 0.88rem;
+  color: rgba(42, 37, 31, 0.6);
 }
 
 .collections__card span {
   font-size: 0.75rem;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .about-strip {
@@ -216,8 +231,8 @@ const { data: collections } = await useFetch('/api/collections')
 }
 
 .about-strip p {
-  margin-top: 1rem;
   max-width: 28rem;
+  margin-top: 1rem;
   color: var(--color-text-muted);
 }
 
@@ -225,8 +240,8 @@ const { data: collections } = await useFetch('/api/collections')
   display: inline-block;
   margin-top: 1.5rem;
   font-size: 0.78rem;
-  letter-spacing: 0.1em;
   text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
 .about-strip__points {
@@ -244,8 +259,8 @@ const { data: collections } = await useFetch('/api/collections')
 }
 
 .about-strip__points span {
-  color: var(--color-text-subtle);
   font-size: 0.88rem;
+  color: var(--color-text-subtle);
 }
 
 @keyframes rise {
@@ -253,6 +268,7 @@ const { data: collections } = await useFetch('/api/collections')
     opacity: 0;
     transform: translateY(18px) scale(0.98);
   }
+
   to {
     opacity: 1;
     transform: none;
@@ -270,8 +286,8 @@ const { data: collections } = await useFetch('/api/collections')
   }
 
   .hero__features {
-    justify-self: center;
     grid-template-columns: 1fr 1fr;
+    justify-self: center;
   }
 
   .collections__grid,

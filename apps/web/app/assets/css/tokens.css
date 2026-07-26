@@ -22,8 +22,8 @@
   --color-danger: #c47a6a;
 
   /* Typography */
-  --font-display: "Cormorant Garamond", "Times New Roman", serif;
-  --font-body: "Manrope", "Segoe UI", sans-serif;
+  --font-display: 'Cormorant Garamond', 'Times New Roman', serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
 
   /* Layout */
   --header-h: 4.5rem;

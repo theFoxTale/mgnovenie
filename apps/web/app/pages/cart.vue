@@ -26,11 +26,17 @@ function formatPrice(price: number) {
               <p>{{ formatPrice(item.price) }}</p>
             </div>
             <div class="qty">
-              <button type="button" @click="cart.setQuantity(item.productId, item.quantity - 1)">−</button>
+              <button type="button" @click="cart.setQuantity(item.productId, item.quantity - 1)">
+                −
+              </button>
               <span>{{ item.quantity }}</span>
-              <button type="button" @click="cart.setQuantity(item.productId, item.quantity + 1)">+</button>
+              <button type="button" @click="cart.setQuantity(item.productId, item.quantity + 1)">
+                +
+              </button>
             </div>
-            <button class="cart__remove" type="button" @click="cart.removeItem(item.productId)">Удалить</button>
+            <button class="cart__remove" type="button" @click="cart.removeItem(item.productId)">
+              Удалить
+            </button>
           </li>
         </ul>
 
@@ -51,8 +57,8 @@ function formatPrice(price: number) {
 }
 
 .cart h1 {
-  font-size: 2.4rem;
   margin-bottom: 1.75rem;
+  font-size: 2.4rem;
 }
 
 .cart__empty {
@@ -96,12 +102,12 @@ function formatPrice(price: number) {
 
 .qty button,
 .qty span {
-  width: 2.2rem;
-  height: 2.2rem;
   display: grid;
   place-items: center;
-  border: 0;
+  width: 2.2rem;
+  height: 2.2rem;
   background: transparent;
+  border: 0;
 }
 
 .qty button {
@@ -109,18 +115,18 @@ function formatPrice(price: number) {
 }
 
 .cart__remove {
-  border: 0;
-  background: transparent;
   color: var(--color-text-subtle);
   cursor: pointer;
+  background: transparent;
+  border: 0;
 }
 
 .summary {
-  padding: 1.5rem;
-  border: 1px solid var(--color-border);
-  background: var(--color-panel);
   display: grid;
   gap: 0.85rem;
+  padding: 1.5rem;
+  background: var(--color-panel);
+  border: 1px solid var(--color-border);
 }
 
 .summary__total {

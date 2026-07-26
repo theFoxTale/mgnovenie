@@ -49,7 +49,8 @@ function subscribe() {
         <section>
           <h2 class="footer__title">Будьте в моменте</h2>
           <p class="muted">
-            Подпишитесь и первыми узнавайте о новинках, лимитированных коллекциях и специальных предложениях.
+            Подпишитесь и первыми узнавайте о новинках, лимитированных коллекциях и специальных
+            предложениях.
           </p>
           <form class="footer__form" @submit.prevent="subscribe">
             <input v-model="email" type="email" placeholder="Ваш e-mail" required />
@@ -115,9 +116,9 @@ function subscribe() {
 }
 
 .footer__trust {
-  background: var(--color-cream);
-  color: var(--color-text-on-cream);
   padding: 2.5rem 0;
+  color: var(--color-text-on-cream);
+  background: var(--color-cream);
 }
 
 .footer__trust-grid {
@@ -133,16 +134,16 @@ function subscribe() {
 }
 
 .trust__icon {
-  opacity: 0.55;
   margin-top: 0.2rem;
+  opacity: 0.55;
 }
 
 .trust h3 {
+  margin-bottom: 0.35rem;
   font-family: var(--font-body);
   font-size: 0.78rem;
-  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 0.35rem;
+  letter-spacing: 0.08em;
 }
 
 .trust p {
@@ -151,8 +152,8 @@ function subscribe() {
 }
 
 .footer__main {
-  background: var(--color-ink-soft);
   padding: 3.5rem 0 2.5rem;
+  background: var(--color-ink-soft);
   border-top: 1px solid var(--color-border);
 }
 
@@ -163,17 +164,17 @@ function subscribe() {
 }
 
 .footer__title {
-  font-size: 1.5rem;
   margin-bottom: 0.75rem;
+  font-size: 1.5rem;
 }
 
 .footer__heading {
+  margin-bottom: 1rem;
   font-family: var(--font-body);
   font-size: 0.72rem;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--color-text-subtle);
-  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
 .footer__links {
@@ -193,18 +194,18 @@ function subscribe() {
 .footer__form {
   display: flex;
   gap: 0.5rem;
-  margin-top: 1.25rem;
   max-width: 22rem;
+  margin-top: 1.25rem;
 }
 
 .footer__form input {
   flex: 1;
   min-height: 2.75rem;
   padding: 0 0.9rem;
+  outline: none;
+  background: transparent;
   border: 0;
   border-bottom: 1px solid var(--color-border-strong);
-  background: transparent;
-  outline: none;
 }
 
 .footer__form .btn {
@@ -214,46 +215,46 @@ function subscribe() {
 
 .footer__note {
   margin-top: 0.75rem;
-  color: var(--color-text-muted);
   font-size: 0.85rem;
+  color: var(--color-text-muted);
 }
 
 .footer__brand-block {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   gap: 1rem;
+  align-items: flex-end;
 }
 
 .footer__monogram {
-  width: 3.5rem;
-  height: 3.5rem;
   display: grid;
   place-items: center;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 50%;
+  width: 3.5rem;
+  height: 3.5rem;
   font-family: var(--font-display);
   font-size: 1.4rem;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
 }
 
 .footer__social {
   display: flex;
   gap: 0.85rem;
   font-size: 0.7rem;
-  letter-spacing: 0.12em;
   color: var(--color-text-subtle);
+  letter-spacing: 0.12em;
 }
 
 .footer__bottom {
-  border-top: 1px solid var(--color-border);
   padding: 1rem 0;
   background: var(--color-ink);
+  border-top: 1px solid var(--color-border);
 }
 
 .footer__bottom-inner {
   display: flex;
-  justify-content: space-between;
   gap: 1rem;
+  justify-content: space-between;
   font-size: 0.75rem;
   color: var(--color-text-subtle);
 }

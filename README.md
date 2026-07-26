@@ -14,6 +14,19 @@ npm run dev
 
 Open http://localhost:3000
 
+### Lint & format
+
+From `apps/web`:
+
+```bash
+npm run lint          # ESLint (flat config via @nuxt/eslint)
+npm run lint:style    # Stylelint
+npm run format        # Prettier write
+npm run lint:all      # ESLint + Stylelint + Prettier check
+```
+
+Configs: `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`.
+
 Catalog APIs use in-memory seed data. Orders are saved to `apps/web/.data/orders.json` when `DATABASE_URL` is not set.
 
 Optional Postgres:

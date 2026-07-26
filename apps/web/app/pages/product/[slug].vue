@@ -74,7 +74,9 @@ function addToCart() {
           <ul class="specs">
             <li><span>Пчелиный воск</span></li>
             <li><span>Деревянный фитиль</span></li>
-            <li><span>{{ product.volumeMl }} мл — {{ product.burnHours }} часов</span></li>
+            <li>
+              <span>{{ product.volumeMl }} мл — {{ product.burnHours }} часов</span>
+            </li>
             <li><span>Ручная работа</span></li>
           </ul>
 
@@ -110,24 +112,45 @@ function addToCart() {
             Состав
             <span>{{ openSection === 'composition' ? '−' : '+' }}</span>
           </button>
-          <p v-if="openSection === 'composition'" class="muted">{{ product.composition.join(', ') }}</p>
+          <p v-if="openSection === 'composition'" class="muted">
+            {{ product.composition.join(', ') }}
+          </p>
 
           <button type="button" @click="openSection = 'delivery'">
             Доставка и оплата
             <span>{{ openSection === 'delivery' ? '−' : '+' }}</span>
           </button>
           <p v-if="openSection === 'delivery'" class="muted">
-            Доставка по России. Оплата при оформлении заказа. Онлайн-оплата через Т‑Банк — на следующем этапе.
+            Доставка по России. Оплата при оформлении заказа. Онлайн-оплата через Т‑Банк — на
+            следующем этапе.
           </p>
         </div>
 
         <dl class="meta">
-          <div><dt>Объём</dt><dd>{{ product.volumeMl }} мл</dd></div>
-          <div><dt>Время горения</dt><dd>до {{ product.burnHours }} часов</dd></div>
-          <div><dt>Материал</dt><dd>{{ product.material }}</dd></div>
-          <div><dt>Фитиль</dt><dd>{{ product.wick }}</dd></div>
-          <div><dt>Аромат</dt><dd>{{ product.scentNotes.join(', ') }}</dd></div>
-          <div><dt>Назначение</dt><dd>{{ product.purpose.join(', ') }}</dd></div>
+          <div>
+            <dt>Объём</dt>
+            <dd>{{ product.volumeMl }} мл</dd>
+          </div>
+          <div>
+            <dt>Время горения</dt>
+            <dd>до {{ product.burnHours }} часов</dd>
+          </div>
+          <div>
+            <dt>Материал</dt>
+            <dd>{{ product.material }}</dd>
+          </div>
+          <div>
+            <dt>Фитиль</dt>
+            <dd>{{ product.wick }}</dd>
+          </div>
+          <div>
+            <dt>Аромат</dt>
+            <dd>{{ product.scentNotes.join(', ') }}</dd>
+          </div>
+          <div>
+            <dt>Назначение</dt>
+            <dd>{{ product.purpose.join(', ') }}</dd>
+          </div>
         </dl>
       </div>
 
@@ -147,8 +170,8 @@ function addToCart() {
 }
 
 .crumbs {
-  font-size: 0.78rem;
   margin-bottom: 1.5rem;
+  font-size: 0.78rem;
 }
 
 .product__layout {
@@ -165,9 +188,9 @@ function addToCart() {
 
 .thumbs__item {
   padding: 0;
-  border: 1px solid transparent;
-  background: var(--color-panel);
   cursor: pointer;
+  background: var(--color-panel);
+  border: 1px solid transparent;
 }
 
 .thumbs__item.is-active {
@@ -181,9 +204,9 @@ function addToCart() {
 }
 
 .gallery {
-  background: var(--color-panel);
   aspect-ratio: 1;
   overflow: hidden;
+  background: var(--color-panel);
 }
 
 .gallery img {
@@ -194,13 +217,13 @@ function addToCart() {
 
 .badge {
   display: inline-block;
-  margin-bottom: 0.75rem;
   padding: 0.2rem 0.55rem;
-  border: 1px solid var(--color-border-strong);
+  margin-bottom: 0.75rem;
   font-size: 0.68rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  border: 1px solid var(--color-border-strong);
 }
 
 .info h1 {
@@ -213,23 +236,23 @@ function addToCart() {
 }
 
 .info__price {
-  font-size: 1.4rem;
   margin-bottom: 1rem;
+  font-size: 1.4rem;
 }
 
 .specs {
   display: grid;
   gap: 0.55rem;
   margin: 1.4rem 0;
-  color: var(--color-text-muted);
   font-size: 0.9rem;
+  color: var(--color-text-muted);
 }
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.65rem;
   align-items: center;
-  flex-wrap: wrap;
 }
 
 .qty {
@@ -240,13 +263,13 @@ function addToCart() {
 
 .qty button,
 .qty span {
-  width: 2.5rem;
-  height: 2.5rem;
   display: grid;
   place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--color-text);
   background: transparent;
   border: 0;
-  color: var(--color-text);
 }
 
 .qty button {
@@ -257,24 +280,24 @@ function addToCart() {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   gap: 2rem;
-  margin-top: 3rem;
   padding-top: 2rem;
+  margin-top: 3rem;
   border-top: 1px solid var(--color-border);
 }
 
 .accordion button {
-  width: 100%;
   display: flex;
   justify-content: space-between;
+  width: 100%;
   padding: 0.95rem 0;
+  font-size: 0.75rem;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  background: transparent;
   border: 0;
   border-bottom: 1px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  font-size: 0.75rem;
-  cursor: pointer;
 }
 
 .accordion p {
@@ -303,8 +326,8 @@ function addToCart() {
 }
 
 .related h2 {
-  font-size: 1.6rem;
   margin-bottom: 1.5rem;
+  font-size: 1.6rem;
 }
 
 .related__grid {
@@ -321,8 +344,8 @@ function addToCart() {
   }
 
   .thumbs {
-    grid-auto-flow: column;
     grid-auto-columns: 4.5rem;
+    grid-auto-flow: column;
     overflow-x: auto;
   }
 }

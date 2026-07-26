@@ -24,7 +24,12 @@ type OrderBody = {
 export default defineEventHandler(async (event) => {
   const body = await readBody<OrderBody>(event)
 
-  if (!body?.customer?.name || !body?.customer?.phone || !body?.customer?.email || !body?.customer?.address) {
+  if (
+    !body?.customer?.name ||
+    !body?.customer?.phone ||
+    !body?.customer?.email ||
+    !body?.customer?.address
+  ) {
     throw createError({ statusCode: 400, statusMessage: 'Customer fields are required' })
   }
 

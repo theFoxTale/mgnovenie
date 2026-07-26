@@ -10,9 +10,9 @@
 
 <style scoped>
 .layout {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   background: var(--color-ink);
 }
 

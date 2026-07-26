@@ -96,11 +96,11 @@ function addToCart() {
   right: 0.75rem;
   width: 2rem;
   height: 2rem;
-  border: 0;
-  border-radius: 50%;
-  background: rgba(20, 18, 16, 0.35);
   color: var(--color-text-muted);
   cursor: pointer;
+  background: rgba(20, 18, 16, 0.35);
+  border: 0;
+  border-radius: 50%;
 }
 
 .card__wish[aria-pressed='true'] {

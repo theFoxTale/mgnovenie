@@ -53,7 +53,8 @@ function setPage(page: number) {
         <nav class="crumbs muted">Главная / Коллекция</nav>
         <h1>Коллекция</h1>
         <p class="muted">
-          Свечи из натурального пчелиного воска с эфирными маслами и деревянным фитилём. Для атмосферы и особых моментов.
+          Свечи из натурального пчелиного воска с эфирными маслами и деревянным фитилём. Для
+          атмосферы и особых моментов.
         </p>
       </div>
     </div>
@@ -98,7 +99,12 @@ function setPage(page: number) {
       </div>
 
       <div class="pager">
-        <button class="btn--icon" type="button" :disabled="filters.page <= 1" @click="setPage(filters.page - 1)">
+        <button
+          class="btn--icon"
+          type="button"
+          :disabled="filters.page <= 1"
+          @click="setPage(filters.page - 1)"
+        >
           ‹
         </button>
         <button
@@ -138,13 +144,13 @@ function setPage(page: number) {
 }
 
 .crumbs {
-  font-size: 0.78rem;
   margin-bottom: 1rem;
+  font-size: 0.78rem;
 }
 
 .collection__hero h1 {
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
   margin-bottom: 0.85rem;
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
 }
 
 .collection__hero p {
@@ -155,8 +161,8 @@ function setPage(page: number) {
   display: grid;
   grid-template-columns: auto repeat(4, 1fr) 1.1fr;
   gap: 0.65rem;
-  margin: 1.5rem 0 2rem;
   padding: 0.65rem;
+  margin: 1.5rem 0 2rem;
   background: rgba(233, 226, 214, 0.04);
   border: 1px solid var(--color-border);
 }
@@ -165,17 +171,17 @@ function setPage(page: number) {
 .filters select {
   min-height: 2.6rem;
   padding: 0 0.85rem;
-  border: 1px solid var(--color-border);
-  background: rgba(233, 226, 214, 0.04);
   color: var(--color-text);
+  background: rgba(233, 226, 214, 0.04);
+  border: 1px solid var(--color-border);
 }
 
 .filters__label {
-  background: var(--color-cream);
-  color: var(--color-text-on-cream);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   font-size: 0.7rem;
+  color: var(--color-text-on-cream);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  background: var(--color-cream);
 }
 
 .grid {
@@ -186,24 +192,24 @@ function setPage(page: number) {
 
 .pager {
   display: flex;
-  justify-content: center;
-  align-items: center;
   gap: 0.45rem;
+  align-items: center;
+  justify-content: center;
   margin-top: 2.5rem;
 }
 
 .pager__page {
   min-width: 2.2rem;
   height: 2.2rem;
-  border: 1px solid transparent;
-  background: transparent;
   color: var(--color-text-muted);
   cursor: pointer;
+  background: transparent;
+  border: 1px solid transparent;
 }
 
 .pager__page.is-active {
-  border-color: var(--color-border-strong);
   color: var(--color-text);
+  border-color: var(--color-border-strong);
 }
 
 @media (max-width: 1100px) {

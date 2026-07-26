@@ -66,7 +66,10 @@ onMounted(() => {
       <div v-if="successId" class="success">
         <h2>Заказ принят</h2>
         <p class="muted">Номер заказа: {{ successId }}</p>
-        <p class="muted">Мы свяжемся с вами для подтверждения. Онлайн-оплата через Т‑Банк появится на следующем этапе.</p>
+        <p class="muted">
+          Мы свяжемся с вами для подтверждения. Онлайн-оплата через Т‑Банк появится на следующем
+          этапе.
+        </p>
         <NuxtLink to="/collection" class="btn">Вернуться в коллекцию</NuxtLink>
       </div>
 
@@ -119,8 +122,8 @@ onMounted(() => {
 }
 
 .checkout h1 {
-  font-size: 2.4rem;
   margin-bottom: 1.75rem;
+  font-size: 2.4rem;
 }
 
 .checkout__layout {
@@ -139,24 +142,24 @@ label {
   display: grid;
   gap: 0.4rem;
   font-size: 0.82rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--color-text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 input,
 textarea {
   width: 100%;
   padding: 0.8rem 0.9rem;
-  border: 1px solid var(--color-border);
-  background: rgba(233, 226, 214, 0.03);
   outline: none;
+  background: rgba(233, 226, 214, 0.03);
+  border: 1px solid var(--color-border);
 }
 
 .summary {
   padding: 1.5rem;
-  border: 1px solid var(--color-border);
   background: var(--color-panel);
+  border: 1px solid var(--color-border);
 }
 
 .summary ul {
@@ -167,8 +170,8 @@ textarea {
 
 .summary li {
   display: flex;
-  justify-content: space-between;
   gap: 1rem;
+  justify-content: space-between;
   color: var(--color-text-muted);
 }
 

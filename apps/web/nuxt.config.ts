@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
-  modules: ['@pinia/nuxt'],
+  modules: ['@pinia/nuxt', '@nuxt/eslint'],
+  eslint: {
+    config: {
+      stylistic: false,
+    },
+  },
   css: ['~/assets/css/main.css'],
   app: {
     head: {
