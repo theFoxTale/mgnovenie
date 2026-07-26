@@ -34,4 +34,9 @@ export default defineNuxtConfig({
       siteUrl: 'http://localhost:3000',
     },
   },
+  nitro: {
+    experimental: {
+      openAPI: true,
+    },
+  },
 })

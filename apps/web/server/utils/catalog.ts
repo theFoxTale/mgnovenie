@@ -4,19 +4,11 @@ import {
   products as memoryProducts,
 } from '../data/catalog'
 import type { CollectionCard } from '#shared/types/catalog'
+import type { ProductQueryInput } from '#shared/schemas/product'
 import type { Product } from '#shared/types/product'
 import { hasDatabase, query } from './db'
 
-export type ProductQuery = {
-  scent?: string
-  purpose?: string
-  composition?: string
-  size?: string
-  sort?: string
-  page?: number
-  pageSize?: number
-  featured?: boolean
-}
+export type ProductQuery = ProductQueryInput
 
 type ProductRow = {
   id: string

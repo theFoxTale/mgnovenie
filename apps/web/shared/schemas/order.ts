@@ -47,3 +47,9 @@ export const orderBodySchema = z.object({
 })
 
 export type OrderBodyInput = z.infer<typeof orderBodySchema>
+
+export type OrderCreateResponse = {
+  id: string
+  status: 'awaiting_manual'
+  total: number
+}

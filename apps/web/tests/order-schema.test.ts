@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { orderBodySchema } from '../server/utils/order-schema'
+import { orderBodySchema } from '../shared/schemas/order'
 
 const validCustomer = {
   name: 'Анна',

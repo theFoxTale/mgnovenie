@@ -1,15 +1,29 @@
+import { productQuerySchema } from '#shared/schemas/product'
 import { listProducts } from '../../utils/catalog'
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Catalog'],
+    summary: 'List products',
+    description: 'Filter, sort, and paginate the candle catalog.',
+    parameters: [
+      { name: 'scent', in: 'query', schema: { type: 'string' } },
+      { name: 'purpose', in: 'query', schema: { type: 'string' } },
+      { name: 'composition', in: 'query', schema: { type: 'string' } },
+      { name: 'size', in: 'query', schema: { type: 'string' } },
+      { name: 'sort', in: 'query', schema: { type: 'string' } },
+      { name: 'page', in: 'query', schema: { type: 'integer', minimum: 1 } },
+      { name: 'pageSize', in: 'query', schema: { type: 'integer', minimum: 1, maximum: 24 } },
+      { name: 'featured', in: 'query', schema: { type: 'string', enum: ['true', '1'] } },
+    ],
+    responses: {
+      '200': { description: 'Paginated product list' },
+      '400': { description: 'Invalid query' },
+    },
+  },
+})
+
 export default defineEventHandler(async (event) => {
-  const query = getQuery(event)
-  return listProducts({
-    scent: typeof query.scent === 'string' ? query.scent : undefined,
-    purpose: typeof query.purpose === 'string' ? query.purpose : undefined,
-    composition: typeof query.composition === 'string' ? query.composition : undefined,
-    size: typeof query.size === 'string' ? query.size : undefined,
-    sort: typeof query.sort === 'string' ? query.sort : undefined,
-    page: query.page ? Number(query.page) : 1,
-    pageSize: query.pageSize ? Number(query.pageSize) : 10,
-    featured: query.featured === 'true' || query.featured === '1',
-  })
+  const query = await getValidatedQuery(event, productQuerySchema.parse)
+  return listProducts(query)
 })

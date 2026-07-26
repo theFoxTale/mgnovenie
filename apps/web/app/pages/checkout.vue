@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import type { OrderCreateResponse } from '#shared/schemas/order'
+import { orderBodySchema } from '#shared/schemas/order'
+
 const cart = useCartStore()
 const router = useRouter()
 
@@ -21,20 +24,28 @@ async function submit() {
     return
   }
 
+  const payload = {
+    customer: { ...form },
+    items: cart.items.map((item) => ({
+      productId: item.productId,
+      slug: item.slug,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+  }
+
+  const parsed = orderBodySchema.safeParse(payload)
+  if (!parsed.success) {
+    errorMessage.value = parsed.error.issues[0]?.message || 'Проверьте данные формы'
+    return
+  }
+
   submitting.value = true
   try {
-    const order = await $fetch<{ id: string }>('/api/orders', {
+    const order = await $fetch<OrderCreateResponse>('/api/orders', {
       method: 'POST',
-      body: {
-        customer: { ...form },
-        items: cart.items.map((item) => ({
-          productId: item.productId,
-          slug: item.slug,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-      },
+      body: parsed.data,
     })
     successId.value = order.id
     cart.clear()

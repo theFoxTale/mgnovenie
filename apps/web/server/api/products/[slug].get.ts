@@ -1,10 +1,29 @@
+import { productSlugParamsSchema } from '#shared/schemas/product'
 import { findProduct, relatedProducts } from '../../utils/catalog'
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Catalog'],
+    summary: 'Get product by slug',
+    description: 'Returns a product and related items for the product page.',
+    parameters: [
+      {
+        name: 'slug',
+        in: 'path',
+        required: true,
+        schema: { type: 'string' },
+      },
+    ],
+    responses: {
+      '200': { description: 'Product detail with related items' },
+      '400': { description: 'Invalid slug' },
+      '404': { description: 'Product not found' },
+    },
+  },
+})
+
 export default defineEventHandler(async (event) => {
-  const slug = getRouterParam(event, 'slug')
-  if (!slug) {
-    throw createError({ statusCode: 400, statusMessage: 'Slug is required' })
-  }
+  const { slug } = await getValidatedRouterParams(event, productSlugParamsSchema.parse)
 
   const product = await findProduct(slug)
   if (!product) {
