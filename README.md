@@ -43,7 +43,7 @@ Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`. On the VPS, use plai
 
 - `apps/web` — Nuxt app (pages, Pinia cart, Nitro API)
 - `db/` — SQL schema and seed
-- `nginx/` — reverse proxy config
+- `nginx/` — reverse proxy (TLS, security headers, ACME webroot)
 - `docker-compose.yml` — web + db + nginx (db internal only)
 - `docker-compose.dev.yml` — local overlay: Postgres on `127.0.0.1:5432`
 
@@ -66,11 +66,17 @@ Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`. On the VPS, use plai
 docker compose up -d --build
 ```
 
-6. TLS (Let's Encrypt) — after DNS works, install certbot and either:
-   - terminate TLS on the host and proxy to nginx:80, or
-   - extend `nginx/nginx.conf` with a 443 server block and mount certificates into `nginx/certs`.
+6. TLS — nginx terminates HTTPS on `:443` (self-signed bootstrap on first start). HTTP `:80` serves ACME challenges and redirects to HTTPS. Security headers: HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`. Replace certs with Let's Encrypt — see `nginx/certs/README.md`.
 
-Example certbot (host nginx / certbot snap) is out of band; minimal HTTP reverse proxy is included for first bring-up.
+```bash
+# after DNS points at the VPS
+sudo certbot certonly --webroot -w "$(pwd)/nginx/www-certbot" -d your.domain
+sudo cp /etc/letsencrypt/live/your.domain/fullchain.pem nginx/certs/fullchain.pem
+sudo cp /etc/letsencrypt/live/your.domain/privkey.pem nginx/certs/privkey.pem
+docker compose exec nginx nginx -s reload
+```
+
+Set `NUXT_PUBLIC_SITE_URL=https://your.domain` in `.env`.
 
 ## Phase 2 (T-Bank)
 
