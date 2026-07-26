@@ -49,7 +49,7 @@ useSeoMeta({
   ogDescription: collectionDescription,
   ogImage: () => {
     const first = data.value?.items?.[0]
-    return first ? `${config.public.siteUrl}${first.image}` : `${config.public.siteUrl}/products/hvoinyi-les.svg`
+    return first ? `${config.public.siteUrl}${first.image}` : `${config.public.siteUrl}/products/hvoinyi-les.webp`
   },
   ogType: 'website',
 })

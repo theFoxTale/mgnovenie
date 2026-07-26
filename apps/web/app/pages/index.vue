@@ -13,7 +13,7 @@ useSeoMeta({
   description: homeDescription,
   ogTitle: homeTitle,
   ogDescription: homeDescription,
-  ogImage: `${config.public.siteUrl}/products/hvoinyi-les.svg`,
+  ogImage: `${config.public.siteUrl}/products/hvoinyi-les.webp`,
   ogType: 'website',
 })
 </script>
@@ -38,7 +38,12 @@ useSeoMeta({
         </div>
 
         <div class="hero__visual" aria-hidden="true">
-          <img src="/products/hvoinyi-les.svg" alt="" />
+          <ProductImage
+            src="/products/hvoinyi-les.webp"
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
 
         <ul class="hero__features">
@@ -75,7 +80,7 @@ useSeoMeta({
             :to="`/product/${item.productSlug}`"
             class="collections__card"
           >
-            <img :src="item.image" :alt="item.title" />
+            <ProductImage :src="item.image" :alt="item.title" loading="lazy" />
             <div>
               <h3>{{ item.title }}</h3>
               <p>{{ item.subtitle }}</p>
@@ -158,6 +163,10 @@ useSeoMeta({
   animation: rise 1.1s var(--ease-out) both;
 }
 
+.hero__visual picture {
+  display: block;
+}
+
 .hero__visual img {
   width: 100%;
   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.45));
@@ -212,9 +221,14 @@ useSeoMeta({
 }
 
 .collections__card img {
+  width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   background: #1c1915;
+}
+
+.collections__card picture {
+  display: block;
 }
 
 .collections__card h3 {

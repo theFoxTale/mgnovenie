@@ -84,12 +84,21 @@ function addToCart() {
             :class="{ 'is-active': index === activeImage }"
             @click="activeImage = index"
           >
-            <img :src="image" :alt="`${product.name} ${index + 1}`" />
+            <ProductImage
+              :src="image"
+              :alt="`${product.name} — фото ${index + 1}`"
+              loading="lazy"
+            />
           </button>
         </aside>
 
         <div class="gallery">
-          <img :src="product.gallery[activeImage] || product.image" :alt="product.name" />
+          <ProductImage
+            :src="product.gallery[activeImage] || product.image"
+            :alt="`${product.name} — ${product.subtitle}`"
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
 
         <div class="info">
@@ -231,10 +240,20 @@ function addToCart() {
   object-fit: cover;
 }
 
+.thumbs__item picture {
+  display: block;
+}
+
 .gallery {
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--color-panel);
+}
+
+.gallery picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .gallery img {

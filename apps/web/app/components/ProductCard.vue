@@ -37,7 +37,7 @@ function addToCart() {
 <template>
   <article class="card">
     <NuxtLink :to="`/product/${product.slug}`" class="card__media">
-      <img :src="product.image" :alt="product.name" loading="lazy" />
+      <ProductImage :src="product.image" :alt="product.name" loading="lazy" />
       <button
         class="card__wish"
         type="button"
@@ -81,6 +81,12 @@ function addToCart() {
   background:
     radial-gradient(circle at 30% 20%, rgba(233, 226, 214, 0.08), transparent 45%),
     var(--color-panel);
+}
+
+.card__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .card__media img {

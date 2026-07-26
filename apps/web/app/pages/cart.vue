@@ -16,7 +16,13 @@ const cart = useCartStore()
         <div v-else class="cart__layout">
           <ul class="cart__list">
             <li v-for="item in cart.items" :key="item.productId" class="cart__item">
-              <img :src="item.image" :alt="item.name" />
+              <ProductImage
+                :src="item.image"
+                :alt="item.name"
+                :width="160"
+                :height="200"
+                loading="lazy"
+              />
               <div>
                 <NuxtLink :to="`/product/${item.slug}`">{{ item.name }}</NuxtLink>
                 <p class="muted">{{ item.subtitle }}</p>
@@ -90,9 +96,13 @@ const cart = useCartStore()
   border-bottom: 1px solid var(--color-border);
 }
 
+.cart__item picture {
+  display: block;
+}
+
 .cart__item img {
   width: 5.5rem;
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
   background: var(--color-panel);
 }
