@@ -1,6 +1,12 @@
 # MGNOVENIE
 
-Натуральные свечи ручной работы. Vue 3 + Nuxt + TypeScript, Postgres, Docker на Debian 13 VPS.
+Натуральные свечи ручной работы. **Vue 3 + Nuxt 4.5** + TypeScript, Postgres, Docker на Debian 13 VPS.
+
+## Stack
+
+- **Nuxt `^4.5.0`** with the Nuxt 4 `app/` directory layout (`apps/web/app/…`), not the older Nuxt 3 root `pages/` layout
+- `compatibilityDate` is pinned in `apps/web/nuxt.config.ts` — keep it when copying config snippets
+- Prefer [Nuxt 4 docs](https://nuxt.com/docs/getting-started/upgrade); treat Nuxt 3 examples carefully (paths and defaults differ)
 
 ## Local development
 
@@ -41,7 +47,7 @@ Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`. On the VPS, use plai
 
 ## Project layout
 
-- `apps/web` — Nuxt app (pages, Pinia cart, Nitro API)
+- `apps/web` — Nuxt 4.5 app (`app/` pages, Pinia cart, Nitro API)
 - `db/` — SQL schema and seed
 - `nginx/` — reverse proxy (TLS, security headers, ACME webroot)
 - `docker-compose.yml` — web + db + nginx (db internal only)
