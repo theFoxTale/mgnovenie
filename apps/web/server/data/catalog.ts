@@ -1,33 +1,8 @@
-export type Product = {
-  id: string
-  slug: string
-  name: string
-  subtitle: string
-  price: number
-  volumeMl: number
-  burnHours: number
-  material: string
-  wick: string
-  scentNotes: string[]
-  purpose: string[]
-  composition: string[]
-  size: 'small' | 'medium' | 'large'
-  badge?: string
-  description: string
-  image: string
-  gallery: string[]
-  featured?: boolean
-  isHit?: boolean
-}
+import type { CollectionCard, Product } from '#shared/types/catalog'
 
-export type CollectionCard = {
-  slug: string
-  title: string
-  subtitle: string
-  image: string
-  productSlug: string
-}
+export type { CollectionCard, Product }
 
+/** In-memory fallback when NUXT_DATABASE_URL is not set (local dev without Postgres). */
 export const products: Product[] = [
   {
     id: '1',
@@ -252,8 +227,4 @@ export const collections: CollectionCard[] = [
 
 export function getProductBySlug(slug: string) {
   return products.find((p) => p.slug === slug)
-}
-
-export function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
 }

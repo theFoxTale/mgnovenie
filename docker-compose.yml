@@ -24,8 +24,9 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-mgnovenie}:${POSTGRES_PASSWORD:-mgnovenie}@db:5432/${POSTGRES_DB:-mgnovenie}
+      NUXT_DATABASE_URL: postgresql://${POSTGRES_USER:-mgnovenie}:${POSTGRES_PASSWORD:-mgnovenie}@db:5432/${POSTGRES_DB:-mgnovenie}
       NUXT_PUBLIC_SITE_URL: ${NUXT_PUBLIC_SITE_URL:-http://localhost}
+      NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 3000
       NITRO_PORT: 3000

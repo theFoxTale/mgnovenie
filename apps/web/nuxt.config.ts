@@ -24,13 +24,14 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
-    databaseUrl: process.env.DATABASE_URL || '',
-    telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '',
-    telegramChatId: process.env.TELEGRAM_CHAT_ID || '',
-    tbankTerminalKey: process.env.TBANK_TERMINAL_KEY || '',
-    tbankPassword: process.env.TBANK_PASSWORD || '',
+    // Override at runtime with NUXT_* env vars (do not bake secrets at build time).
+    databaseUrl: '',
+    telegramBotToken: '',
+    telegramChatId: '',
+    tbankTerminalKey: '',
+    tbankPassword: '',
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      siteUrl: 'http://localhost:3000',
     },
   },
 })

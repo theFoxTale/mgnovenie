@@ -37,21 +37,22 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Cart is empty' })
   }
 
-  const items = body.items.map((item) => {
-    const product = findProduct(item.slug)
+  const items = []
+  for (const item of body.items) {
+    const product = await findProduct(item.slug)
     if (!product) {
       throw createError({ statusCode: 400, statusMessage: `Unknown product: ${item.slug}` })
     }
-    const quantity = Math.max(1, Number(item.quantity) || 1)
-    return {
+    const quantity = Math.min(99, Math.max(1, Number(item.quantity) || 1))
+    items.push({
       productId: product.id,
       slug: product.slug,
       name: product.name,
       price: product.price,
       quantity,
       lineTotal: product.price * quantity,
-    }
-  })
+    })
+  }
 
   const total = items.reduce((sum, item) => sum + item.lineTotal, 0)
   const order = {

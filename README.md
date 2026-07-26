@@ -27,9 +27,9 @@ npm run lint:all      # ESLint + Stylelint + Prettier check
 
 Configs: `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`.
 
-Catalog APIs use in-memory seed data. Orders are saved to `apps/web/.data/orders.json` when `DATABASE_URL` is not set.
+Catalog: with `NUXT_DATABASE_URL` set, products/collections/orders use Postgres (`db/seed.sql`). Without it (local only), the in-memory catalog is used and orders go to `apps/web/.data/orders.json`. **Production requires Postgres** (file store is disabled when `NODE_ENV=production`).
 
-Optional Postgres:
+Optional Postgres for local API against a real DB:
 
 ```bash
 # from repo root
@@ -37,7 +37,7 @@ cp .env.example .env
 docker compose up -d db
 ```
 
-Then set `DATABASE_URL` and restart the Nuxt app. Orders will be written to Postgres.
+Then run the Nuxt app with `NUXT_DATABASE_URL` from `.env`.
 
 ## Project layout
 

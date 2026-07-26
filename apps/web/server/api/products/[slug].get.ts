@@ -1,18 +1,18 @@
 import { findProduct, relatedProducts } from '../../utils/catalog'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const slug = getRouterParam(event, 'slug')
   if (!slug) {
     throw createError({ statusCode: 400, statusMessage: 'Slug is required' })
   }
 
-  const product = findProduct(slug)
+  const product = await findProduct(slug)
   if (!product) {
     throw createError({ statusCode: 404, statusMessage: 'Product not found' })
   }
 
   return {
     product,
-    related: relatedProducts(product),
+    related: await relatedProducts(product),
   }
 })

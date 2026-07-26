@@ -1,6 +1,6 @@
 import { listProducts } from '../../utils/catalog'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   return listProducts({
     scent: typeof query.scent === 'string' ? query.scent : undefined,
