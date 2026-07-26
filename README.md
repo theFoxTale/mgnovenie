@@ -36,6 +36,8 @@ Configs: `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`.
 
 API contracts (S7): Zod schemas in `shared/schemas/`, `defineRouteMeta` OpenAPI on catalog/orders routes, Nitro `experimental.openAPI` (dev: `/_swagger`, `/_openapi.json`).
 
+SEO (P4 Phase 1): `usePageSeo` sets title/description, OG/Twitter, and canonical from `NUXT_PUBLIC_SITE_URL`. Dynamic `/robots.txt` and `/sitemap.xml` (products + public pages). Cart/checkout are `noindex`. Later: `@nuxtjs/seo` for schema.org / module automation.
+
 Catalog: with `NUXT_DATABASE_URL` set, products/collections/orders use Postgres (`db/seed.sql`). Without it (local only), the in-memory catalog is used and orders go to `apps/web/.data/orders.json`. **Production requires Postgres** (file store is disabled when `NODE_ENV=production`).
 
 Optional Postgres for local API against a real DB (publishes `127.0.0.1:5432` only):

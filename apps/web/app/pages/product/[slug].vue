@@ -19,18 +19,16 @@ if (error.value) {
 const product = computed(() => data.value?.product)
 const related = computed(() => data.value?.related || [])
 
-const config = useRuntimeConfig()
+const origin = useSiteOrigin()
 
-useSeoMeta({
+usePageSeo({
   title: () => (product.value ? `${product.value.name} — MGNOVENIE` : 'MGNOVENIE'),
   description: () =>
     product.value
       ? product.value.description.slice(0, 160)
       : 'Натуральные свечи ручной работы из пчелиного воска.',
-  ogTitle: () => (product.value ? `${product.value.name} — MGNOVENIE` : 'MGNOVENIE'),
-  ogDescription: () => product.value?.subtitle || product.value?.description?.slice(0, 160),
-  ogImage: () =>
-    product.value ? `${config.public.siteUrl}${product.value.image}` : undefined,
+  path: () => `/product/${String(route.params.slug || '')}`,
+  ogImage: () => (product.value ? `${origin}${product.value.image}` : undefined),
   ogType: 'website',
 })
 

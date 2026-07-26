@@ -1,5 +1,12 @@
 <script setup lang="ts">
 const cart = useCartStore()
+
+usePageSeo({
+  title: 'Корзина — MGNOVENIE',
+  description: 'Корзина покупок MGNOVENIE.',
+  path: '/cart',
+  robots: 'noindex, nofollow',
+})
 </script>
 
 <template>

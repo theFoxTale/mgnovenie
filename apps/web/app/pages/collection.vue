@@ -37,21 +37,19 @@ const { data } = await useFetch<{
   pageCount: number
 }>('/api/products', { query })
 
-const config = useRuntimeConfig()
+const origin = useSiteOrigin()
 const collectionTitle = 'Коллекция свечей — MGNOVENIE'
 const collectionDescription =
   'Каталог натуральных свечей из пчелиного воска: фильтры по аромату, назначению и размеру.'
 
-useSeoMeta({
+usePageSeo({
   title: collectionTitle,
   description: collectionDescription,
-  ogTitle: collectionTitle,
-  ogDescription: collectionDescription,
+  path: '/collection',
   ogImage: () => {
     const first = data.value?.items?.[0]
-    return first ? `${config.public.siteUrl}${first.image}` : `${config.public.siteUrl}/products/hvoinyi-les.webp`
+    return first ? `${origin}${first.image}` : `${origin}/products/hvoinyi-les.webp`
   },
-  ogType: 'website',
 })
 
 watch(

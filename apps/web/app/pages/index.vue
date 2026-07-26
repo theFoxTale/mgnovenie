@@ -3,18 +3,16 @@ import type { CollectionCard } from '#shared/types/catalog'
 
 const { data: collections } = await useFetch<{ items: CollectionCard[] }>('/api/collections')
 
-const config = useRuntimeConfig()
+const origin = useSiteOrigin()
 const homeTitle = 'MGNOVENIE — натуральные свечи'
 const homeDescription =
   'Натуральные свечи ручной работы из пчелиного воска. Искусство создавать мгновения.'
 
-useSeoMeta({
+usePageSeo({
   title: homeTitle,
   description: homeDescription,
-  ogTitle: homeTitle,
-  ogDescription: homeDescription,
-  ogImage: `${config.public.siteUrl}/products/hvoinyi-les.webp`,
-  ogType: 'website',
+  path: '/',
+  ogImage: `${origin}/products/hvoinyi-les.webp`,
 })
 </script>
 

@@ -5,6 +5,13 @@ import { orderBodySchema } from '#shared/schemas/order'
 const cart = useCartStore()
 const router = useRouter()
 
+usePageSeo({
+  title: 'Оформление заказа — MGNOVENIE',
+  description: 'Оформление заказа натуральных свечей MGNOVENIE.',
+  path: '/checkout',
+  robots: 'noindex, nofollow',
+})
+
 const form = reactive({
   name: '',
   phone: '',

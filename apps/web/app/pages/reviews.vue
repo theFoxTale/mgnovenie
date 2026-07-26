@@ -1,3 +1,12 @@
+<script setup lang="ts">
+usePageSeo({
+  title: 'Отзывы — MGNOVENIE',
+  description: 'Отзывы о натуральных свечах MGNOVENIE. Раздел в подготовке.',
+  path: '/reviews',
+  ogImage: `${useSiteOrigin()}/products/hvoinyi-les.webp`,
+})
+</script>
+
 <template>
   <div class="stub page">
     <div class="container">

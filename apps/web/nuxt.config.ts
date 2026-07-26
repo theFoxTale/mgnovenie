@@ -49,5 +49,7 @@ export default defineNuxtConfig({
     // Public catalog APIs (orders stay uncached)
     '/api/products/**': { swr: 600 },
     '/api/collections': { swr: 900 },
+    '/sitemap.xml': { swr: 600 },
+    '/robots.txt': { swr: 3600 },
   },
 })
