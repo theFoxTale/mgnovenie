@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { products } from '../server/data/catalog'
-import { filterAndPage } from '../server/utils/catalog'
+import { filterAndPage } from '../shared/utils/filter-products'
 
 describe('filterAndPage', () => {
   it('filters by scent note', () => {

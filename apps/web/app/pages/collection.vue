@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import type { Product } from '#shared/types/product'
+import { filterAndPage } from '#shared/utils/filter-products'
 
 const route = useRoute()
 const router = useRouter()
+
+const PAGE_SIZE = 10
 
 function filtersFromRoute() {
   return {
@@ -15,27 +18,44 @@ function filtersFromRoute() {
   }
 }
 
+function queryFromFilters() {
+  return {
+    scent: filters.scent === 'all' ? undefined : filters.scent,
+    purpose: filters.purpose === 'all' ? undefined : filters.purpose,
+    composition: filters.composition === 'all' ? undefined : filters.composition,
+    size: filters.size === 'all' ? undefined : filters.size,
+    sort: filters.sort === 'newest' ? undefined : filters.sort,
+    page: filters.page > 1 ? String(filters.page) : undefined,
+  }
+}
+
 const filters = reactive(filtersFromRoute())
-let syncingFromRoute = false
+/** Ignore the next route→filters sync after we push filters→route ourselves. */
+let ignoreNextRouteSync = false
 
-const query = computed(() => ({
-  scent: filters.scent,
-  purpose: filters.purpose,
-  composition: filters.composition,
-  size: filters.size,
-  sort: filters.sort,
-  page: filters.page,
-  pageSize: 10,
-}))
-
-// Single fetch path: useFetch watches `query` and refetches when filters change.
-const { data } = await useFetch<{
+// One catalog fetch — filter/sort/page locally (Phase 1 catalog is small).
+const { data: catalog } = await useFetch<{
   items: Product[]
   total: number
-  page: number
-  pageSize: number
-  pageCount: number
-}>('/api/products', { query })
+}>('/api/products', {
+  query: { page: 1, pageSize: 24 },
+  // Stable key so filter UI never retriggers a fetch.
+  key: 'collection-catalog',
+})
+
+const catalogItems = computed(() => catalog.value?.items || [])
+
+const view = computed(() =>
+  filterAndPage(catalogItems.value, {
+    scent: filters.scent,
+    purpose: filters.purpose,
+    composition: filters.composition,
+    size: filters.size,
+    sort: filters.sort,
+    page: filters.page,
+    pageSize: PAGE_SIZE,
+  }),
+)
 
 const origin = useSiteOrigin()
 const collectionTitle = 'Коллекция свечей — MGNOVENIE'
@@ -47,36 +67,41 @@ usePageSeo({
   description: collectionDescription,
   path: '/collection',
   ogImage: () => {
-    const first = data.value?.items?.[0]
+    const first = view.value.items[0] || catalogItems.value[0]
     return first ? `${origin}${first.image}` : `${origin}/products/hvoinyi-les.webp`
   },
 })
 
+// Browser back/forward (and shared links): hydrate filters from the URL.
 watch(
   () => route.query,
   () => {
-    syncingFromRoute = true
+    if (ignoreNextRouteSync) {
+      ignoreNextRouteSync = false
+      return
+    }
     Object.assign(filters, filtersFromRoute())
-    nextTick(() => {
-      syncingFromRoute = false
-    })
+  },
+)
+
+// Facet change → jump back to page 1, then mirror filters into the URL (no refetch).
+watch(
+  () => [filters.scent, filters.purpose, filters.composition, filters.size, filters.sort] as const,
+  (next, prev) => {
+    if (prev && next.some((value, index) => value !== prev[index]) && filters.page !== 1) {
+      filters.page = 1
+    }
   },
 )
 
 watch(
   filters,
-  () => {
-    if (syncingFromRoute) return
-    router.replace({
-      query: {
-        scent: filters.scent === 'all' ? undefined : filters.scent,
-        purpose: filters.purpose === 'all' ? undefined : filters.purpose,
-        composition: filters.composition === 'all' ? undefined : filters.composition,
-        size: filters.size === 'all' ? undefined : filters.size,
-        sort: filters.sort === 'newest' ? undefined : filters.sort,
-        page: filters.page > 1 ? String(filters.page) : undefined,
-      },
-    })
+  async () => {
+    ignoreNextRouteSync = true
+    await router.replace({ query: queryFromFilters() })
+    await nextTick()
+    // Clear even if replace was a no-op and the route watcher never ran.
+    ignoreNextRouteSync = false
   },
   { deep: true },
 )
@@ -135,7 +160,7 @@ function setPage(page: number) {
       </div>
 
       <div class="grid">
-        <ProductCard v-for="product in data?.items || []" :key="product.id" :product="product" />
+        <ProductCard v-for="product in view.items" :key="product.id" :product="product" />
       </div>
 
       <div class="pager">
@@ -148,7 +173,7 @@ function setPage(page: number) {
           ‹
         </button>
         <button
-          v-for="page in data?.pageCount || 1"
+          v-for="page in view.pageCount"
           :key="page"
           class="pager__page"
           type="button"
@@ -160,7 +185,7 @@ function setPage(page: number) {
         <button
           class="btn--icon"
           type="button"
-          :disabled="filters.page >= (data?.pageCount || 1)"
+          :disabled="filters.page >= view.pageCount"
           @click="setPage(filters.page + 1)"
         >
           ›
