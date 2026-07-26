@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto'
 import { ZodError } from 'zod'
 import { findProduct } from '../../utils/catalog'
+import { priceOrderItems } from '../../utils/order-pricing'
 import { orderBodySchema } from '../../utils/order-schema'
 import { saveOrder } from '../../utils/orders'
 
@@ -21,23 +22,26 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const items = []
+  const resolved = new Map<string, Awaited<ReturnType<typeof findProduct>>>()
   for (const item of body.items) {
+    if (resolved.has(item.slug)) continue
     const product = await findProduct(item.slug)
     if (!product) {
       throw createError({ statusCode: 400, statusMessage: `Unknown product: ${item.slug}` })
     }
-    items.push({
-      productId: product.id,
-      slug: product.slug,
-      name: product.name,
-      price: product.price,
-      quantity: item.quantity,
-      lineTotal: product.price * item.quantity,
+    resolved.set(item.slug, product)
+  }
+
+  let priced
+  try {
+    priced = priceOrderItems(body.items, (slug) => resolved.get(slug) || null)
+  } catch (error) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: error instanceof Error ? error.message : 'Invalid order items',
     })
   }
 
-  const total = items.reduce((sum, item) => sum + item.lineTotal, 0)
   const order = {
     id: randomUUID(),
     status: 'awaiting_manual' as const,
@@ -49,8 +53,8 @@ export default defineEventHandler(async (event) => {
       address: body.customer.address,
       comment: body.customer.comment,
     },
-    items,
-    total,
+    items: priced.items,
+    total: priced.total,
   }
 
   await saveOrder(order)

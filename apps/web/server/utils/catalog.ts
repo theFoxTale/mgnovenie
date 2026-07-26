@@ -77,7 +77,7 @@ function includesFacet(values: string[], facet?: string) {
   return values.some((v) => v.toLowerCase() === facet.toLowerCase())
 }
 
-function filterAndPage(items: Product[], query: ProductQuery = {}) {
+export function filterAndPage(items: Product[], query: ProductQuery = {}) {
   const page = Math.max(1, query.page || 1)
   const pageSize = Math.min(24, Math.max(1, query.pageSize || 10))
 

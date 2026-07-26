@@ -29,6 +29,7 @@ npm run lint          # ESLint (flat config via @nuxt/eslint)
 npm run lint:style    # Stylelint
 npm run format        # Prettier write
 npm run lint:all      # ESLint + Stylelint + Prettier check
+npm test              # Vitest unit tests (catalog, order pricing, schema)
 ```
 
 Configs: `eslint.config.mjs`, `prettier.config.mjs`, `stylelint.config.mjs`.
