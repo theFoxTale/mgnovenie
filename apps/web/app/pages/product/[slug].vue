@@ -4,6 +4,7 @@ const cart = useCartStore()
 const quantity = ref(1)
 const openSection = ref<'description' | 'composition' | 'delivery'>('description')
 const activeImage = ref(0)
+const wishlisted = ref(false)
 
 const { data, error } = await useFetch(() => `/api/products/${route.params.slug}`)
 
@@ -20,6 +21,18 @@ watch(
     activeImage.value = 0
   },
 )
+
+watch(
+  () => cart.wishlist.slice(),
+  () => {
+    if (product.value) wishlisted.value = cart.isWishlisted(product.value.id)
+  },
+)
+
+onMounted(() => {
+  cart.hydrate()
+  if (product.value) wishlisted.value = cart.isWishlisted(product.value.id)
+})
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
@@ -90,7 +103,7 @@ function addToCart() {
             <button
               class="btn--icon"
               type="button"
-              :aria-pressed="cart.isWishlisted(product.id)"
+              :aria-pressed="wishlisted"
               aria-label="В избранное"
               @click="cart.toggleWishlist(product.id)"
             >

@@ -13,10 +13,25 @@ const props = defineProps<{
 }>()
 
 const cart = useCartStore()
+const wishlisted = ref(false)
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
 }
+
+function syncWishlist() {
+  wishlisted.value = cart.isWishlisted(props.product.id)
+}
+
+onMounted(() => {
+  cart.hydrate()
+  syncWishlist()
+})
+
+watch(
+  () => cart.wishlist.slice(),
+  () => syncWishlist(),
+)
 
 function addToCart() {
   cart.addItem({
@@ -37,7 +52,7 @@ function addToCart() {
       <button
         class="card__wish"
         type="button"
-        :aria-pressed="cart.isWishlisted(product.id)"
+        :aria-pressed="wishlisted"
         aria-label="В избранное"
         @click.prevent="cart.toggleWishlist(product.id)"
       >

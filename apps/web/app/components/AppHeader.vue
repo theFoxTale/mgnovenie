@@ -3,6 +3,8 @@ const cart = useCartStore()
 const route = useRoute()
 const menuOpen = ref(false)
 
+const cartLabel = 'Корзина'
+
 const links = [
   { to: '/collection', label: 'Коллекции' },
   { to: '/about', label: 'О нас' },
@@ -51,12 +53,21 @@ watch(
             />
           </svg>
         </NuxtLink>
-        <NuxtLink to="/cart" class="header__icon header__cart" aria-label="Корзина">
+        <NuxtLink
+          to="/cart"
+          class="header__icon header__cart"
+          :aria-label="cartLabel"
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 8h12l-1 12H7L6 8z" stroke="currentColor" stroke-width="1.5" />
             <path d="M9 8a3 3 0 016 0" stroke="currentColor" stroke-width="1.5" />
           </svg>
-          <span>({{ cart.itemCount }})</span>
+          <ClientOnly>
+            <span>({{ cart.itemCount }})</span>
+            <template #fallback>
+              <span>(0)</span>
+            </template>
+          </ClientOnly>
         </NuxtLink>
       </div>
     </div>

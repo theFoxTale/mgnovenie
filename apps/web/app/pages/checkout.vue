@@ -73,45 +73,51 @@ onMounted(() => {
         <NuxtLink to="/collection" class="btn">Вернуться в коллекцию</NuxtLink>
       </div>
 
-      <form v-else class="checkout__layout" @submit.prevent="submit">
-        <div class="fields">
-          <label>
-            Имя
-            <input v-model="form.name" required />
-          </label>
-          <label>
-            Телефон
-            <input v-model="form.phone" type="tel" required />
-          </label>
-          <label>
-            Email
-            <input v-model="form.email" type="email" required />
-          </label>
-          <label>
-            Адрес доставки
-            <textarea v-model="form.address" rows="3" required />
-          </label>
-          <label>
-            Комментарий
-            <textarea v-model="form.comment" rows="3" />
-          </label>
-          <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-          <button class="btn" type="submit" :disabled="submitting">
-            {{ submitting ? 'Отправка…' : 'Оформить заказ' }}
-          </button>
-        </div>
+      <ClientOnly v-else>
+        <form class="checkout__layout" @submit.prevent="submit">
+          <div class="fields">
+            <label>
+              Имя
+              <input v-model="form.name" required />
+            </label>
+            <label>
+              Телефон
+              <input v-model="form.phone" type="tel" required />
+            </label>
+            <label>
+              Email
+              <input v-model="form.email" type="email" required />
+            </label>
+            <label>
+              Адрес доставки
+              <textarea v-model="form.address" rows="3" required />
+            </label>
+            <label>
+              Комментарий
+              <textarea v-model="form.comment" rows="3" />
+            </label>
+            <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+            <button class="btn" type="submit" :disabled="submitting">
+              {{ submitting ? 'Отправка…' : 'Оформить заказ' }}
+            </button>
+          </div>
 
-        <aside class="summary">
-          <h2>Ваш заказ</h2>
-          <ul>
-            <li v-for="item in cart.items" :key="item.productId">
-              <span>{{ item.name }} × {{ item.quantity }}</span>
-              <strong>{{ formatPrice(item.price * item.quantity) }}</strong>
-            </li>
-          </ul>
-          <p class="summary__total">Итого: {{ formatPrice(cart.total) }}</p>
-        </aside>
-      </form>
+          <aside class="summary">
+            <h2>Ваш заказ</h2>
+            <ul>
+              <li v-for="item in cart.items" :key="item.productId">
+                <span>{{ item.name }} × {{ item.quantity }}</span>
+                <strong>{{ formatPrice(item.price * item.quantity) }}</strong>
+              </li>
+            </ul>
+            <p class="summary__total">Итого: {{ formatPrice(cart.total) }}</p>
+          </aside>
+        </form>
+
+        <template #fallback>
+          <p class="muted">Загрузка заказа…</p>
+        </template>
+      </ClientOnly>
     </div>
   </div>
 </template>

@@ -11,42 +11,48 @@ function formatPrice(price: number) {
     <div class="container">
       <h1>Корзина</h1>
 
-      <div v-if="!cart.items.length" class="cart__empty">
-        <p class="muted">Пока пусто. Выберите свечу из коллекции.</p>
-        <NuxtLink to="/collection" class="btn">Перейти в коллекцию</NuxtLink>
-      </div>
+      <ClientOnly>
+        <div v-if="!cart.items.length" class="cart__empty">
+          <p class="muted">Пока пусто. Выберите свечу из коллекции.</p>
+          <NuxtLink to="/collection" class="btn">Перейти в коллекцию</NuxtLink>
+        </div>
 
-      <div v-else class="cart__layout">
-        <ul class="cart__list">
-          <li v-for="item in cart.items" :key="item.productId" class="cart__item">
-            <img :src="item.image" :alt="item.name" />
-            <div>
-              <NuxtLink :to="`/product/${item.slug}`">{{ item.name }}</NuxtLink>
-              <p class="muted">{{ item.subtitle }}</p>
-              <p>{{ formatPrice(item.price) }}</p>
-            </div>
-            <div class="qty">
-              <button type="button" @click="cart.setQuantity(item.productId, item.quantity - 1)">
-                −
+        <div v-else class="cart__layout">
+          <ul class="cart__list">
+            <li v-for="item in cart.items" :key="item.productId" class="cart__item">
+              <img :src="item.image" :alt="item.name" />
+              <div>
+                <NuxtLink :to="`/product/${item.slug}`">{{ item.name }}</NuxtLink>
+                <p class="muted">{{ item.subtitle }}</p>
+                <p>{{ formatPrice(item.price) }}</p>
+              </div>
+              <div class="qty">
+                <button type="button" @click="cart.setQuantity(item.productId, item.quantity - 1)">
+                  −
+                </button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" @click="cart.setQuantity(item.productId, item.quantity + 1)">
+                  +
+                </button>
+              </div>
+              <button class="cart__remove" type="button" @click="cart.removeItem(item.productId)">
+                Удалить
               </button>
-              <span>{{ item.quantity }}</span>
-              <button type="button" @click="cart.setQuantity(item.productId, item.quantity + 1)">
-                +
-              </button>
-            </div>
-            <button class="cart__remove" type="button" @click="cart.removeItem(item.productId)">
-              Удалить
-            </button>
-          </li>
-        </ul>
+            </li>
+          </ul>
 
-        <aside class="summary">
-          <h2>Итого</h2>
-          <p class="summary__total">{{ formatPrice(cart.total) }}</p>
-          <p class="muted">Доставка рассчитывается при оформлении.</p>
-          <NuxtLink to="/checkout" class="btn">Оформить заказ</NuxtLink>
-        </aside>
-      </div>
+          <aside class="summary">
+            <h2>Итого</h2>
+            <p class="summary__total">{{ formatPrice(cart.total) }}</p>
+            <p class="muted">Доставка рассчитывается при оформлении.</p>
+            <NuxtLink to="/checkout" class="btn">Оформить заказ</NuxtLink>
+          </aside>
+        </div>
+
+        <template #fallback>
+          <p class="muted">Загрузка корзины…</p>
+        </template>
+      </ClientOnly>
     </div>
   </div>
 </template>
