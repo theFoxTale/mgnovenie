@@ -13,12 +13,22 @@
 Requirements: Node.js 24+ (via nvm), npm.
 
 ```bash
+# from repo root (installs Husky hooks + root tooling)
+npm install
+
 cd apps/web
 npm install
 npm run dev
 ```
 
 Open http://localhost:3000
+
+### Git hooks (Husky)
+
+From the repo root after `npm install`:
+
+- **pre-commit** — lint-staged (ESLint / Stylelint / Prettier on staged `apps/web` files)
+- **pre-push** — `npm test` (Vitest in `apps/web`)
 
 ### Lint & format
 
