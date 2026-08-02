@@ -70,10 +70,11 @@ coverage/
 .data/
 
 # -----------------------------------------------------------------------------
-# Docker / TLS (local certs only; keep placeholder)
+# Docker / TLS (local / issued certs only; keep docs)
 # -----------------------------------------------------------------------------
 nginx/certs/*
 !nginx/certs/.gitkeep
+!nginx/certs/README.md
 
 # -----------------------------------------------------------------------------
 # Temporary / scratch

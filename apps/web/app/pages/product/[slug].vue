@@ -1,11 +1,16 @@
 <script setup lang="ts">
+import type { Product } from '#shared/types/product'
+
 const route = useRoute()
 const cart = useCartStore()
 const quantity = ref(1)
 const openSection = ref<'description' | 'composition' | 'delivery'>('description')
 const activeImage = ref(0)
+const wishlisted = ref(false)
 
-const { data, error } = await useFetch(() => `/api/products/${route.params.slug}`)
+const { data, error } = await useFetch<{ product: Product; related: Product[] }>(
+  () => `/api/products/${route.params.slug}`,
+)
 
 if (error.value) {
   throw createError({ statusCode: 404, statusMessage: 'Товар не найден' })
@@ -14,6 +19,19 @@ if (error.value) {
 const product = computed(() => data.value?.product)
 const related = computed(() => data.value?.related || [])
 
+const origin = useSiteOrigin()
+
+usePageSeo({
+  title: () => (product.value ? `${product.value.name} — MGNOVENIE` : 'MGNOVENIE'),
+  description: () =>
+    product.value
+      ? product.value.description.slice(0, 160)
+      : 'Натуральные свечи ручной работы из пчелиного воска.',
+  path: () => `/product/${String(route.params.slug || '')}`,
+  ogImage: () => (product.value ? `${origin}${product.value.image}` : undefined),
+  ogType: 'website',
+})
+
 watch(
   () => product.value?.gallery?.[0],
   () => {
@@ -21,9 +39,17 @@ watch(
   },
 )
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
-}
+watch(
+  () => cart.wishlist.slice(),
+  () => {
+    if (product.value) wishlisted.value = cart.isWishlisted(product.value.id)
+  },
+)
+
+onMounted(() => {
+  cart.hydrate()
+  if (product.value) wishlisted.value = cart.isWishlisted(product.value.id)
+})
 
 function addToCart() {
   if (!product.value) return
@@ -56,12 +82,21 @@ function addToCart() {
             :class="{ 'is-active': index === activeImage }"
             @click="activeImage = index"
           >
-            <img :src="image" :alt="`${product.name} ${index + 1}`" />
+            <ProductImage
+              :src="image"
+              :alt="`${product.name} — фото ${index + 1}`"
+              loading="lazy"
+            />
           </button>
         </aside>
 
         <div class="gallery">
-          <img :src="product.gallery[activeImage] || product.image" :alt="product.name" />
+          <ProductImage
+            :src="product.gallery[activeImage] || product.image"
+            :alt="`${product.name} — ${product.subtitle}`"
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
 
         <div class="info">
@@ -90,7 +125,7 @@ function addToCart() {
             <button
               class="btn--icon"
               type="button"
-              :aria-pressed="cart.isWishlisted(product.id)"
+              :aria-pressed="wishlisted"
               aria-label="В избранное"
               @click="cart.toggleWishlist(product.id)"
             >
@@ -203,10 +238,20 @@ function addToCart() {
   object-fit: cover;
 }
 
+.thumbs__item picture {
+  display: block;
+}
+
 .gallery {
-  aspect-ratio: 1;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   background: var(--color-panel);
+}
+
+.gallery picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .gallery img {

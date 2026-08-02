@@ -1,3 +1,13 @@
+<script setup lang="ts">
+usePageSeo({
+  title: 'Материалы — MGNOVENIE',
+  description:
+    'Пчелиный воск, деревянный фитиль и эфирные масла — натуральные компоненты без парафина.',
+  path: '/materials',
+  ogImage: `${useSiteOrigin()}/products/hvoinyi-les.webp`,
+})
+</script>
+
 <template>
   <div class="stub page">
     <div class="container">

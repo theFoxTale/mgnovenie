@@ -1,5 +1,19 @@
 <script setup lang="ts">
-const { data: collections } = await useFetch('/api/collections')
+import type { CollectionCard } from '#shared/types/catalog'
+
+const { data: collections } = await useFetch<{ items: CollectionCard[] }>('/api/collections')
+
+const origin = useSiteOrigin()
+const homeTitle = 'MGNOVENIE — натуральные свечи'
+const homeDescription =
+  'Натуральные свечи ручной работы из пчелиного воска. Искусство создавать мгновения.'
+
+usePageSeo({
+  title: homeTitle,
+  description: homeDescription,
+  path: '/',
+  ogImage: `${origin}/products/hvoinyi-les.webp`,
+})
 </script>
 
 <template>
@@ -22,7 +36,12 @@ const { data: collections } = await useFetch('/api/collections')
         </div>
 
         <div class="hero__visual" aria-hidden="true">
-          <img src="/products/hvoinyi-les.svg" alt="" />
+          <ProductImage
+            src="/products/hvoinyi-les.webp"
+            alt=""
+            loading="eager"
+            fetchpriority="high"
+          />
         </div>
 
         <ul class="hero__features">
@@ -59,7 +78,7 @@ const { data: collections } = await useFetch('/api/collections')
             :to="`/product/${item.productSlug}`"
             class="collections__card"
           >
-            <img :src="item.image" :alt="item.title" />
+            <ProductImage :src="item.image" :alt="item.title" loading="lazy" />
             <div>
               <h3>{{ item.title }}</h3>
               <p>{{ item.subtitle }}</p>
@@ -142,6 +161,10 @@ const { data: collections } = await useFetch('/api/collections')
   animation: rise 1.1s var(--ease-out) both;
 }
 
+.hero__visual picture {
+  display: block;
+}
+
 .hero__visual img {
   width: 100%;
   filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.45));
@@ -196,9 +219,14 @@ const { data: collections } = await useFetch('/api/collections')
 }
 
 .collections__card img {
+  width: 100%;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   background: #1c1915;
+}
+
+.collections__card picture {
+  display: block;
 }
 
 .collections__card h3 {

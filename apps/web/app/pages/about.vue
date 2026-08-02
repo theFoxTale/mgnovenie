@@ -1,3 +1,13 @@
+<script setup lang="ts">
+usePageSeo({
+  title: 'О нас — MGNOVENIE',
+  description:
+    'MGNOVENIE — мастерская натуральных свечей из пчелиного воска для тихих вечеров и особенных подарков.',
+  path: '/about',
+  ogImage: `${useSiteOrigin()}/products/hvoinyi-les.webp`,
+})
+</script>
+
 <template>
   <div class="stub page">
     <div class="container">

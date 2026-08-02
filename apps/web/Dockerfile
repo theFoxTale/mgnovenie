@@ -16,6 +16,12 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
-COPY --from=build /app/.output ./.output
+
+RUN addgroup -g 1001 -S nodejs \
+  && adduser -S -u 1001 -G nodejs nuxt
+
+COPY --from=build --chown=nuxt:nodejs /app/.output ./.output
+
+USER nuxt
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]

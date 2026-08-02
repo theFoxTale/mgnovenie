@@ -1,49 +1,107 @@
 <script setup lang="ts">
+import type { LocationQuery } from 'vue-router'
+import type { Product } from '#shared/types/product'
+import { filterAndPage } from '#shared/utils/filter-products'
+
 const route = useRoute()
 const router = useRouter()
 
-const filters = reactive({
-  scent: (route.query.scent as string) || 'all',
-  purpose: (route.query.purpose as string) || 'all',
-  composition: (route.query.composition as string) || 'all',
-  size: (route.query.size as string) || 'all',
-  sort: (route.query.sort as string) || 'newest',
-  page: Number(route.query.page || 1),
+const PAGE_SIZE = 10
+
+type CollectionFilters = {
+  scent: string
+  purpose: string
+  composition: string
+  size: string
+  sort: string
+  page: number
+}
+
+function filtersFromQuery(query: LocationQuery): CollectionFilters {
+  return {
+    scent: typeof query.scent === 'string' ? query.scent : 'all',
+    purpose: typeof query.purpose === 'string' ? query.purpose : 'all',
+    composition: typeof query.composition === 'string' ? query.composition : 'all',
+    size: typeof query.size === 'string' ? query.size : 'all',
+    sort: typeof query.sort === 'string' ? query.sort : 'newest',
+    page: Number(query.page || 1) || 1,
+  }
+}
+
+function queryFromFilters(value: CollectionFilters) {
+  return {
+    scent: value.scent === 'all' ? undefined : value.scent,
+    purpose: value.purpose === 'all' ? undefined : value.purpose,
+    composition: value.composition === 'all' ? undefined : value.composition,
+    size: value.size === 'all' ? undefined : value.size,
+    sort: value.sort === 'newest' ? undefined : value.sort,
+    page: value.page > 1 ? String(value.page) : undefined,
+  }
+}
+
+function sameQuery(a: LocationQuery, b: ReturnType<typeof queryFromFilters>) {
+  const keys = ['scent', 'purpose', 'composition', 'size', 'sort', 'page'] as const
+  return keys.every((key) => String(a[key] ?? '') === String(b[key] ?? ''))
+}
+
+const filters = reactive<CollectionFilters>(filtersFromQuery(route.query))
+
+// One catalog fetch — filter/sort/page locally (works without Postgres).
+const { data: catalog, error: catalogError } = await useFetch<{
+  items: Product[]
+  total: number
+}>('/api/products', {
+  query: { page: 1, pageSize: 24 },
+  key: 'collection-catalog',
 })
 
-const query = computed(() => ({
-  scent: filters.scent,
-  purpose: filters.purpose,
-  composition: filters.composition,
-  size: filters.size,
-  sort: filters.sort,
-  page: filters.page,
-  pageSize: 10,
-}))
+const catalogItems = computed(() => catalog.value?.items || [])
 
-const { data, refresh } = await useFetch('/api/products', { query })
-
-watch(
-  filters,
-  async () => {
-    await router.replace({
-      query: {
-        scent: filters.scent === 'all' ? undefined : filters.scent,
-        purpose: filters.purpose === 'all' ? undefined : filters.purpose,
-        composition: filters.composition === 'all' ? undefined : filters.composition,
-        size: filters.size === 'all' ? undefined : filters.size,
-        sort: filters.sort === 'newest' ? undefined : filters.sort,
-        page: filters.page > 1 ? String(filters.page) : undefined,
-      },
-    })
-    await refresh()
-  },
-  { deep: true },
+const view = computed(() =>
+  filterAndPage(catalogItems.value, {
+    scent: filters.scent,
+    purpose: filters.purpose,
+    composition: filters.composition,
+    size: filters.size,
+    sort: filters.sort,
+    page: filters.page,
+    pageSize: PAGE_SIZE,
+  }),
 )
+
+const origin = useSiteOrigin()
+usePageSeo({
+  title: 'Коллекция свечей — MGNOVENIE',
+  description:
+    'Каталог натуральных свечей из пчелиного воска: фильтры по аромату, назначению и размеру.',
+  path: '/collection',
+  ogImage: () => {
+    const first = view.value.items[0] || catalogItems.value[0]
+    return first ? `${origin}${first.image}` : `${origin}/products/hvoinyi-les.webp`
+  },
+})
+
+function syncUrl() {
+  const next = queryFromFilters(filters)
+  if (sameQuery(route.query, next)) return
+  return router.replace({ query: next })
+}
+
+/** Select change: v-model already updated `filters`; reset page and mirror URL. */
+function onFacetChange() {
+  filters.page = 1
+  syncUrl()
+}
 
 function setPage(page: number) {
   filters.page = page
+  syncUrl()
 }
+
+// Back/forward only — do not fight with select v-model.
+onBeforeRouteUpdate((to) => {
+  Object.assign(filters, filtersFromQuery(to.query))
+})
 </script>
 
 <template>
@@ -61,8 +119,8 @@ function setPage(page: number) {
 
     <div class="container">
       <div class="filters">
-        <button class="filters__label" type="button">Фильтры</button>
-        <select v-model="filters.scent">
+        <span class="filters__label">Фильтры</span>
+        <select v-model="filters.scent" aria-label="Аромат" @change="onFacetChange">
           <option value="all">Все ароматы</option>
           <option value="пихта">Пихта</option>
           <option value="мёд">Мёд</option>
@@ -70,23 +128,28 @@ function setPage(page: number) {
           <option value="лаванда">Лаванда</option>
           <option value="корица">Корица</option>
         </select>
-        <select v-model="filters.purpose">
+        <select v-model="filters.purpose" aria-label="Назначение" @change="onFacetChange">
           <option value="all">Назначение</option>
           <option value="для дома">Для дома</option>
           <option value="для подарка">Для подарка</option>
         </select>
-        <select v-model="filters.composition">
+        <select v-model="filters.composition" aria-label="Состав" @change="onFacetChange">
           <option value="all">Состав</option>
           <option value="пчелиный воск">Пчелиный воск</option>
           <option value="эфирные масла">Эфирные масла</option>
         </select>
-        <select v-model="filters.size">
+        <select v-model="filters.size" aria-label="Размер" @change="onFacetChange">
           <option value="all">Размер</option>
           <option value="small">Малый</option>
           <option value="medium">Средний</option>
           <option value="large">Большой</option>
         </select>
-        <select v-model="filters.sort" class="filters__sort">
+        <select
+          v-model="filters.sort"
+          class="filters__sort"
+          aria-label="Сортировка"
+          @change="onFacetChange"
+        >
           <option value="newest">Сначала новые</option>
           <option value="price-asc">Цена ↑</option>
           <option value="price-desc">Цена ↓</option>
@@ -94,11 +157,14 @@ function setPage(page: number) {
         </select>
       </div>
 
+      <p v-if="catalogError" class="muted">Не удалось загрузить каталог. Обновите страницу.</p>
+      <p v-else class="results muted">Найдено: {{ view.total }}</p>
+
       <div class="grid">
-        <ProductCard v-for="product in data?.items || []" :key="product.id" :product="product" />
+        <ProductCard v-for="product in view.items" :key="product.id" :product="product" />
       </div>
 
-      <div class="pager">
+      <div v-if="view.pageCount > 1" class="pager">
         <button
           class="btn--icon"
           type="button"
@@ -108,7 +174,7 @@ function setPage(page: number) {
           ‹
         </button>
         <button
-          v-for="page in data?.pageCount || 1"
+          v-for="page in view.pageCount"
           :key="page"
           class="pager__page"
           type="button"
@@ -120,7 +186,7 @@ function setPage(page: number) {
         <button
           class="btn--icon"
           type="button"
-          :disabled="filters.page >= (data?.pageCount || 1)"
+          :disabled="filters.page >= view.pageCount"
           @click="setPage(filters.page + 1)"
         >
           ›
@@ -162,7 +228,7 @@ function setPage(page: number) {
   grid-template-columns: auto repeat(4, 1fr) 1.1fr;
   gap: 0.65rem;
   padding: 0.65rem;
-  margin: 1.5rem 0 2rem;
+  margin: 1.5rem 0 1rem;
   background: rgba(233, 226, 214, 0.04);
   border: 1px solid var(--color-border);
 }
@@ -177,11 +243,18 @@ function setPage(page: number) {
 }
 
 .filters__label {
+  display: inline-flex;
+  align-items: center;
   font-size: 0.7rem;
   color: var(--color-text-on-cream);
   text-transform: uppercase;
   letter-spacing: 0.12em;
   background: var(--color-cream);
+}
+
+.results {
+  margin-bottom: 1.25rem;
+  font-size: 0.85rem;
 }
 
 .grid {

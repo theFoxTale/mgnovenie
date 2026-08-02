@@ -1,3 +1,12 @@
+<script setup lang="ts">
+usePageSeo({
+  title: 'Контакты — MGNOVENIE',
+  description: 'Связаться с MGNOVENIE: вопросы по заказам, доставке и сотрудничеству.',
+  path: '/contacts',
+  ogImage: `${useSiteOrigin()}/products/hvoinyi-les.webp`,
+})
+</script>
+
 <template>
   <div class="stub page">
     <div class="container">

@@ -12,6 +12,11 @@ export type CartItem = {
 
 const STORAGE_KEY = 'mgnovenie-cart'
 
+/**
+ * Manual localStorage persistence (not pinia-plugin-persistedstate).
+ * hydrate/persist are client-only — never read storage during SSR.
+ * Header cart badge is wrapped in <ClientOnly> for a clean hydration boundary.
+ */
 export const useCartStore = defineStore('cart', {
   state: () => ({
     items: [] as CartItem[],

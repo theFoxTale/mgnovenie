@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: process.env.NODE_ENV !== 'production' },
   modules: ['@pinia/nuxt', '@nuxt/eslint'],
   eslint: {
     config: {
@@ -18,19 +18,39 @@ export default defineNuxtConfig({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
       ],
       link: [
-        { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
-        { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        { rel: 'preload', href: '/fonts/manrope-cyrillic-400-normal.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
+        { rel: 'preload', href: '/fonts/manrope-latin-400-normal.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
+        { rel: 'preload', href: '/fonts/cormorant-garamond-cyrillic-500-normal.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
+        { rel: 'preload', href: '/fonts/cormorant-garamond-latin-500-normal.woff2', as: 'font', type: 'font/woff2', crossorigin: '' },
       ],
     },
   },
   runtimeConfig: {
-    databaseUrl: process.env.DATABASE_URL || '',
-    telegramBotToken: process.env.TELEGRAM_BOT_TOKEN || '',
-    telegramChatId: process.env.TELEGRAM_CHAT_ID || '',
-    tbankTerminalKey: process.env.TBANK_TERMINAL_KEY || '',
-    tbankPassword: process.env.TBANK_PASSWORD || '',
+    // Override at runtime with NUXT_* env vars (do not bake secrets at build time).
+    databaseUrl: '',
+    telegramBotToken: '',
+    telegramChatId: '',
+    tbankTerminalKey: '',
+    tbankPassword: '',
     public: {
-      siteUrl: process.env.NUXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      siteUrl: 'http://localhost:3000',
     },
+  },
+  nitro: {
+    experimental: {
+      openAPI: true,
+    },
+  },
+  routeRules: {
+    // Public catalog pages — stale-while-revalidate (seconds)
+    '/': { swr: 900 },
+    // Collection filters client-side; avoid treating every ?scent= as a new cached document.
+    '/collection': { swr: false },
+    '/product/**': { swr: 900 },
+    // Public catalog APIs (orders stay uncached)
+    '/api/products/**': { swr: 600 },
+    '/api/collections': { swr: 900 },
+    '/sitemap.xml': { swr: 600 },
+    '/robots.txt': { swr: 3600 },
   },
 })

@@ -41,6 +41,15 @@ async function writeFileOrders(orders: StoredOrder[]) {
   await writeFile(ordersFile, JSON.stringify(orders, null, 2), 'utf8')
 }
 
+function assertCanUseFileStore() {
+  if (process.env.NODE_ENV === 'production') {
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'Database is required in production (set NUXT_DATABASE_URL)',
+    })
+  }
+}
+
 export async function saveOrder(order: StoredOrder) {
   if (hasDatabase()) {
     await query(
@@ -61,6 +70,8 @@ export async function saveOrder(order: StoredOrder) {
     )
     return
   }
+
+  assertCanUseFileStore()
 
   const orders = await readFileOrders()
   orders.unshift(order)

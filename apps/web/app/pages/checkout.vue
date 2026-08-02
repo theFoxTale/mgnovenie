@@ -1,6 +1,16 @@
 <script setup lang="ts">
+import type { OrderCreateResponse } from '#shared/schemas/order'
+import { orderBodySchema } from '#shared/schemas/order'
+
 const cart = useCartStore()
 const router = useRouter()
+
+usePageSeo({
+  title: 'Оформление заказа — MGNOVENIE',
+  description: 'Оформление заказа натуральных свечей MGNOVENIE.',
+  path: '/checkout',
+  robots: 'noindex, nofollow',
+})
 
 const form = reactive({
   name: '',
@@ -14,10 +24,6 @@ const submitting = ref(false)
 const errorMessage = ref('')
 const successId = ref('')
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
-}
-
 async function submit() {
   errorMessage.value = ''
   if (!cart.items.length) {
@@ -25,20 +31,28 @@ async function submit() {
     return
   }
 
+  const payload = {
+    customer: { ...form },
+    items: cart.items.map((item) => ({
+      productId: item.productId,
+      slug: item.slug,
+      name: item.name,
+      price: item.price,
+      quantity: item.quantity,
+    })),
+  }
+
+  const parsed = orderBodySchema.safeParse(payload)
+  if (!parsed.success) {
+    errorMessage.value = parsed.error.issues[0]?.message || 'Проверьте данные формы'
+    return
+  }
+
   submitting.value = true
   try {
-    const order = await $fetch<{ id: string }>('/api/orders', {
+    const order = await $fetch<OrderCreateResponse>('/api/orders', {
       method: 'POST',
-      body: {
-        customer: { ...form },
-        items: cart.items.map((item) => ({
-          productId: item.productId,
-          slug: item.slug,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity,
-        })),
-      },
+      body: parsed.data,
     })
     successId.value = order.id
     cart.clear()
@@ -73,45 +87,51 @@ onMounted(() => {
         <NuxtLink to="/collection" class="btn">Вернуться в коллекцию</NuxtLink>
       </div>
 
-      <form v-else class="checkout__layout" @submit.prevent="submit">
-        <div class="fields">
-          <label>
-            Имя
-            <input v-model="form.name" required />
-          </label>
-          <label>
-            Телефон
-            <input v-model="form.phone" type="tel" required />
-          </label>
-          <label>
-            Email
-            <input v-model="form.email" type="email" required />
-          </label>
-          <label>
-            Адрес доставки
-            <textarea v-model="form.address" rows="3" required />
-          </label>
-          <label>
-            Комментарий
-            <textarea v-model="form.comment" rows="3" />
-          </label>
-          <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-          <button class="btn" type="submit" :disabled="submitting">
-            {{ submitting ? 'Отправка…' : 'Оформить заказ' }}
-          </button>
-        </div>
+      <ClientOnly v-else>
+        <form class="checkout__layout" @submit.prevent="submit">
+          <div class="fields">
+            <label>
+              Имя
+              <input v-model="form.name" required />
+            </label>
+            <label>
+              Телефон
+              <input v-model="form.phone" type="tel" required />
+            </label>
+            <label>
+              Email
+              <input v-model="form.email" type="email" required />
+            </label>
+            <label>
+              Адрес доставки
+              <textarea v-model="form.address" rows="3" required />
+            </label>
+            <label>
+              Комментарий
+              <textarea v-model="form.comment" rows="3" />
+            </label>
+            <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+            <button class="btn" type="submit" :disabled="submitting">
+              {{ submitting ? 'Отправка…' : 'Оформить заказ' }}
+            </button>
+          </div>
 
-        <aside class="summary">
-          <h2>Ваш заказ</h2>
-          <ul>
-            <li v-for="item in cart.items" :key="item.productId">
-              <span>{{ item.name }} × {{ item.quantity }}</span>
-              <strong>{{ formatPrice(item.price * item.quantity) }}</strong>
-            </li>
-          </ul>
-          <p class="summary__total">Итого: {{ formatPrice(cart.total) }}</p>
-        </aside>
-      </form>
+          <aside class="summary">
+            <h2>Ваш заказ</h2>
+            <ul>
+              <li v-for="item in cart.items" :key="item.productId">
+                <span>{{ item.name }} × {{ item.quantity }}</span>
+                <strong>{{ formatPrice(item.price * item.quantity) }}</strong>
+              </li>
+            </ul>
+            <p class="summary__total">Итого: {{ formatPrice(cart.total) }}</p>
+          </aside>
+        </form>
+
+        <template #fallback>
+          <p class="muted">Загрузка заказа…</p>
+        </template>
+      </ClientOnly>
     </div>
   </div>
 </template>

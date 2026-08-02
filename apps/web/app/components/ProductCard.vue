@@ -1,22 +1,26 @@
 <script setup lang="ts">
-type CardProduct = {
-  id: string
-  slug: string
-  name: string
-  subtitle: string
-  price: number
-  image: string
-}
+import type { ProductSummary } from '#shared/types/product'
 
 const props = defineProps<{
-  product: CardProduct
+  product: ProductSummary
 }>()
 
 const cart = useCartStore()
+const wishlisted = ref(false)
 
-function formatPrice(price: number) {
-  return new Intl.NumberFormat('ru-RU').format(price) + ' ₽'
+function syncWishlist() {
+  wishlisted.value = cart.isWishlisted(props.product.id)
 }
+
+onMounted(() => {
+  cart.hydrate()
+  syncWishlist()
+})
+
+watch(
+  () => cart.wishlist.slice(),
+  () => syncWishlist(),
+)
 
 function addToCart() {
   cart.addItem({
@@ -33,11 +37,11 @@ function addToCart() {
 <template>
   <article class="card">
     <NuxtLink :to="`/product/${product.slug}`" class="card__media">
-      <img :src="product.image" :alt="product.name" loading="lazy" />
+      <ProductImage :src="product.image" :alt="product.name" loading="lazy" />
       <button
         class="card__wish"
         type="button"
-        :aria-pressed="cart.isWishlisted(product.id)"
+        :aria-pressed="wishlisted"
         aria-label="В избранное"
         @click.prevent="cart.toggleWishlist(product.id)"
       >
@@ -77,6 +81,12 @@ function addToCart() {
   background:
     radial-gradient(circle at 30% 20%, rgba(233, 226, 214, 0.08), transparent 45%),
     var(--color-panel);
+}
+
+.card__media picture {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .card__media img {

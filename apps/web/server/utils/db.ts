@@ -4,16 +4,25 @@ const { Pool } = pg
 
 let pool: pg.Pool | null = null
 
+export function getDatabaseUrl() {
+  const config = useRuntimeConfig()
+  return String(config.databaseUrl || '').trim()
+}
+
 export function hasDatabase() {
-  return Boolean(process.env.DATABASE_URL)
+  return Boolean(getDatabaseUrl())
 }
 
 export function getPool() {
-  if (!hasDatabase()) {
-    throw new Error('DATABASE_URL is not configured')
+  const databaseUrl = getDatabaseUrl()
+  if (!databaseUrl) {
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'Database is not configured (NUXT_DATABASE_URL)',
+    })
   }
   if (!pool) {
-    pool = new Pool({ connectionString: process.env.DATABASE_URL })
+    pool = new Pool({ connectionString: databaseUrl })
   }
   return pool
 }
@@ -22,6 +31,13 @@ export async function query<T extends pg.QueryResultRow = pg.QueryResultRow>(
   text: string,
   params: unknown[] = [],
 ) {
-  const result = await getPool().query<T>(text, params)
-  return result
+  try {
+    return await getPool().query<T>(text, params)
+  } catch (error) {
+    console.error('[db] query failed', error)
+    throw createError({
+      statusCode: 503,
+      statusMessage: 'Database unavailable',
+    })
+  }
 }

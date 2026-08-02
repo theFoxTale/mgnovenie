@@ -3,6 +3,11 @@ const cart = useCartStore()
 const route = useRoute()
 const menuOpen = ref(false)
 
+const cartAriaLabel = computed(() => {
+  if (!cart.hydrated || cart.itemCount === 0) return 'Корзина'
+  return `Корзина (${cart.itemCount})`
+})
+
 const links = [
   { to: '/collection', label: 'Коллекции' },
   { to: '/about', label: 'О нас' },
@@ -51,12 +56,15 @@ watch(
             />
           </svg>
         </NuxtLink>
-        <NuxtLink to="/cart" class="header__icon header__cart" aria-label="Корзина">
+        <NuxtLink to="/cart" class="header__icon header__cart" :aria-label="cartAriaLabel">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M6 8h12l-1 12H7L6 8z" stroke="currentColor" stroke-width="1.5" />
             <path d="M9 8a3 3 0 016 0" stroke="currentColor" stroke-width="1.5" />
           </svg>
-          <span>({{ cart.itemCount }})</span>
+          <!-- Count is client-only to avoid SSR/localStorage hydration mismatch -->
+          <ClientOnly>
+            <span v-if="cart.itemCount > 0">({{ cart.itemCount }})</span>
+          </ClientOnly>
         </NuxtLink>
       </div>
     </div>
